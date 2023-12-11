@@ -11,7 +11,7 @@
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}",
                 "-std=c++17",
-                "-Wshadow", "-Wall", "-fsanitize=address", "-fsanitize=undefined", "-D_GLIBCXX_DEBUG", "-Wconversion"
+                "-Wshadow", "-Wall", "-fsanitize=address", "-fsanitize=undefined", "-D_GLIBCXX_DEBUG", "-Wconversion", "-Wno-sign-conversion"
             ],
             "options": {
                 "cwd": "${fileDirname}"
