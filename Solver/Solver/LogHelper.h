@@ -96,7 +96,7 @@ debug& operator<<(const debug d, const T (&a)[n][m][k][t]) {
     return debug(false) << arr(a);
 }
 string tabs(int n) { 
-    return string(n, ' ') + string(n, ' ');
+    return string((size_t)n, ' ') + string((size_t)n, ' ');
 }
 
 //---INPUT-FOUNDATION-----------------------------------------------
