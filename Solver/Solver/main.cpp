@@ -1,9 +1,10 @@
-//
-//  main.cpp
-//  Solver
-//
-//  Created by Ievgenii Mykhalevskyi on 01.12.2023.
-//
+#define LOCAL
+
+#ifdef LOCAL
+#include "LogHelper.h"
+#endif
+
+////-----SOLUTION STARTS HERE ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #include <iostream>
 #include <fstream>
@@ -14,16 +15,8 @@
 #include <stdio.h>
 #include <queue>
 
-#define LOCAL
-
-#ifdef LOCAL
-#include "LogHelper.h"
-#else
-class debug {
-public:
-    debug(bool isend = true){}
-    template<class c> debug& operator<<(const c&) { return *this; }
-};
+#ifndef LOCAL
+class debug {public: debug(bool isend = true){} template<class c> debug& operator<<(const c&) { return *this; }};
 #define imie(...) ""
 #define endl "\n"
 #endif
@@ -41,7 +34,7 @@ struct M {
     }
     
     friend ostream& operator<<(ostream &o, const M& a) {
-        debug(false) << imie(a.i) imie(a.j) imie(a.cost);
+        debug(false) << "(" << imie(a.i) imie(a.j) imie(a.cost) << ")";
         return o;
     }
 };
@@ -57,14 +50,6 @@ int main(int argc, const char * argv[]) {
     while(getline(in, str)) {
         
     }
-    
-    vector<int> a = {0, 1, 2, 3};
-
-    vector<M> v = {{0, 1, 2}, {10,20, 30}};
-    
-    debug() << imie(v);
-    
-    debug() << imie(a);
     
     // insert code here...
     debug() << imie((sum));

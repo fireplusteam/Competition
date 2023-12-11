@@ -8,6 +8,11 @@
 #ifndef LogHelper_h
 #define LogHelper_h
 
+#include <iostream>
+#include <vector>
+#include <set>
+#include <sstream>
+
 using namespace std;
 
 #define LOCAL
