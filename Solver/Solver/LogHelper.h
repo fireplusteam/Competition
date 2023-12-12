@@ -71,7 +71,11 @@ struct debug {
     template < class c > debug & operator <<(rge<c> d) {
         *this << "[";
         for (auto it = d.b; it != d.e; ++it)
-            *this << ", " + 2 * (it == d.b) << *it;
+            if(it == d.b) {
+                *this << *it;
+            } else {
+                *this << ", " << *it;
+            }
         return * this << "]";
     }
 };
