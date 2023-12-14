@@ -14,6 +14,8 @@
 #include <sstream>
 #include <stdio.h>
 #include <queue>
+#include <cassert>
+#include <functional>
 
 #ifndef LOCAL
 class debug {public: debug(bool isend = true){} template<class c> debug& operator<<(const c&) { return *this; }};
