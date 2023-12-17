@@ -64,8 +64,34 @@ struct debug {
         return * this << range(begin(i), end(i));
     }
     
+    template < class c, class b, class f, class a > debug & operator <<(tuple < b, c, f, a > d) {
+        return * this << "(" << get<0>(d) << ", " << get<1>(d) << ", " << get<2>(d) << ", " << get<3>(d) << ")";
+    }
+    
+    template < class c, class b, class f > debug & operator <<(tuple < b, c, f > d) {
+        return * this << "(" << get<0>(d) << ", " << get<1>(d) << ", " << get<2>(d) << ")";
+    }
+    
+    template < class c, class b > debug & operator <<(tuple < b, c > d) {
+        return * this << "(" << get<0>(d) << ", " << get<1>(d) << ")";
+    }
+    
+    template < class c> debug & operator <<(tuple < c > d) {
+        return * this << "(" << get<0>(d) << ")";
+    }
+ 
     template < class c, class b > debug & operator <<(pair < b, c > d) {
         return * this << "(" << d.first << ", " << d.second << ")";
+    }
+    
+    debug & operator <<( const string &a) {
+        if (a.size() > 0 && (isspace(a[0]) || isspace(a.back()))) {
+            cerr << "\"" << a.c_str() << "\"";
+            return * this;
+        } else {
+            cerr << a.c_str();
+            return * this;
+        }
     }
     
     template < class c > debug & operator <<(rge<c> d) {
