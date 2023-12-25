@@ -28,6 +28,9 @@
 		5D02FA2D2B19EEE70086CA32 /* Solver */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Solver; sourceTree = BUILT_PRODUCTS_DIR; };
 		5D02FA302B19EEE70086CA32 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		5D02FA372B19F17E0086CA32 /* input.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = input.txt; sourceTree = "<group>"; };
+		5D5961642B3852E80005551A /* Rational.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Rational.h; sourceTree = "<group>"; };
+		5D5961652B3857EB0005551A /* BigInt.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BigInt.h; sourceTree = "<group>"; };
+		5D5961662B3858FE0005551A /* fft.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fft.h; sourceTree = "<group>"; };
 		5DD75DD02B27211C00BED200 /* LogHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LogHelper.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -64,6 +67,9 @@
 				5D02FA302B19EEE70086CA32 /* main.cpp */,
 				5D02FA372B19F17E0086CA32 /* input.txt */,
 				5DD75DD02B27211C00BED200 /* LogHelper.h */,
+				5D5961642B3852E80005551A /* Rational.h */,
+				5D5961652B3857EB0005551A /* BigInt.h */,
+				5D5961662B3858FE0005551A /* fft.h */,
 			);
 			path = Solver;
 			sourceTree = "<group>";
@@ -251,7 +257,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				OTHER_CFLAGS = "\"-Wl,-stack_size -Wl,0x100000000000\"";
+				OTHER_CFLAGS = "\"-Wl,-stack_size -Wl,0x10000000000\"";
 				PRODUCT_BUNDLE_IDENTIFIER = "buttom-line";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -261,7 +267,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				OTHER_CFLAGS = "\"-Wl,-stack_size -Wl,0x100000000000\"";
+				OTHER_CFLAGS = "\"-Wl,-stack_size -Wl,0x10000000000\"";
 				PRODUCT_BUNDLE_IDENTIFIER = "buttom-line";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
