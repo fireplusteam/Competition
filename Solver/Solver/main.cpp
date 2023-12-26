@@ -1,7 +1,7 @@
 #define LOCAL
 
 #ifdef LOCAL
-#include "LogHelper.h"
+#include "Helper/LogHelper.h"
 #endif
 
 ////-----SOLUTION STARTS HERE ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -16,7 +16,6 @@
 #include <queue>
 #include <cassert>
 #include <functional>
-#include "Rational.h"
 
 #ifndef LOCAL
 class debug {public: debug(bool isend = true){} template<class c> debug& operator<<(const c&) { return *this; }};
@@ -25,8 +24,11 @@ class debug {public: debug(bool isend = true){} template<class c> debug& operato
 #endif
 
 /// START: Algos helper
-#include "max_flow_dinic.h"
-#include "InputParserHelper.h"
+#ifdef LOCAL
+#include "Algo/Rational.h"
+#include "Algo/max_flow_dinic.h"
+#include "Helper/InputParserHelper.h"
+#endif
 /// END: Algos helpers
 
 using namespace std;
@@ -47,16 +49,16 @@ struct M {
 };
 
 int main(int argc, const char * argv[]) {
+    
     ifstream in("input.txt");
     
     string str;
     
     long long sum = 0;
-    
     while(getline(in, str)) {
         
     }
-   
+    
     // insert code here...
     debug() << imie((sum));
     
