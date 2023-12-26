@@ -16,8 +16,6 @@
 
 using namespace std;
 
-#define LOCAL
-
 template<class T, size_t n> vector<T> arr(const T (&a)[n]) {
     vector<T> r(a, a + n); return r;
 }
