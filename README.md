@@ -8,3 +8,6 @@ Source code of many know algorithm:
 https://github.com/indy256/codelibrary/tree/master
 
 
+COMPETIONS:
+
+https://adventofcode.com/
