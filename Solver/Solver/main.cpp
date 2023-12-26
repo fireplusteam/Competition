@@ -16,6 +16,7 @@
 #include <queue>
 #include <cassert>
 #include <functional>
+#include "Rational.h"
 
 #ifndef LOCAL
 class debug {public: debug(bool isend = true){} template<class c> debug& operator<<(const c&) { return *this; }};
@@ -23,36 +24,39 @@ class debug {public: debug(bool isend = true){} template<class c> debug& operato
 #define endl "\n"
 #endif
 
+/// START: Algos helper
+#include "max_flow_dinic.h"
+#include "InputParserHelper.h"
+/// END: Algos helpers
+
 using namespace std;
 
 struct M {
-    int i, j;
-    int cost;
+    long long x, vx, y, vy, z, vz;
     
-    friend bool operator<(const M&a, const M& b) {
+    /*friend bool operator<(const M&a, const M& b) {
         if(a.cost != b.cost) return a.cost < b.cost;
         if(a.i != b.i) return  a.i < b.i;
         return a.j < b.j;
-    }
+    }*/
     
     friend ostream& operator<<(ostream &o, const M& a) {
-        debug(false) << "(" << imie(a.i) imie(a.j) imie(a.cost) << ")";
+        //debug(false) << "(" << imie(a.i) imie(a.j) imie(a.cost) << ")";
         return o;
     }
 };
-
 
 int main(int argc, const char * argv[]) {
     ifstream in("input.txt");
     
     string str;
     
-    int64_t sum = 0;
+    long long sum = 0;
     
     while(getline(in, str)) {
         
     }
-    
+   
     // insert code here...
     debug() << imie((sum));
     

@@ -1,10 +1,3 @@
-//
-//  fft.h
-//  Solver
-//
-//  Created by Ievgenii Mykhalevskyi on 24.12.2023.
-//
-
 #ifndef fft_h
 #define fft_h
 

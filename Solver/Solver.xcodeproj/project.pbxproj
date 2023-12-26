@@ -28,8 +28,10 @@
 		5D02FA2D2B19EEE70086CA32 /* Solver */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Solver; sourceTree = BUILT_PRODUCTS_DIR; };
 		5D02FA302B19EEE70086CA32 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		5D02FA372B19F17E0086CA32 /* input.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = input.txt; sourceTree = "<group>"; };
+		5D4525602B3AB6B200F9AC6D /* max_flow_dinic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = max_flow_dinic.h; sourceTree = "<group>"; };
+		5D4525612B3AB77C00F9AC6D /* InputParserHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InputParserHelper.h; sourceTree = "<group>"; };
 		5D5961642B3852E80005551A /* Rational.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Rational.h; sourceTree = "<group>"; };
-		5D5961652B3857EB0005551A /* BigInt.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BigInt.h; sourceTree = "<group>"; };
+		5D5961652B3857EB0005551A /* bigint.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bigint.h; sourceTree = "<group>"; };
 		5D5961662B3858FE0005551A /* fft.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fft.h; sourceTree = "<group>"; };
 		5DD75DD02B27211C00BED200 /* LogHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LogHelper.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -64,14 +66,32 @@
 		5D02FA2F2B19EEE70086CA32 /* Solver */ = {
 			isa = PBXGroup;
 			children = (
+				5D45255F2B3A0ACF00F9AC6D /* Helper */,
+				5D45255E2B3A0AB900F9AC6D /* Algo */,
 				5D02FA302B19EEE70086CA32 /* main.cpp */,
 				5D02FA372B19F17E0086CA32 /* input.txt */,
-				5DD75DD02B27211C00BED200 /* LogHelper.h */,
-				5D5961642B3852E80005551A /* Rational.h */,
-				5D5961652B3857EB0005551A /* BigInt.h */,
-				5D5961662B3858FE0005551A /* fft.h */,
 			);
 			path = Solver;
+			sourceTree = "<group>";
+		};
+		5D45255E2B3A0AB900F9AC6D /* Algo */ = {
+			isa = PBXGroup;
+			children = (
+				5D5961642B3852E80005551A /* Rational.h */,
+				5D5961652B3857EB0005551A /* bigint.h */,
+				5D5961662B3858FE0005551A /* fft.h */,
+				5D4525602B3AB6B200F9AC6D /* max_flow_dinic.h */,
+			);
+			path = Algo;
+			sourceTree = "<group>";
+		};
+		5D45255F2B3A0ACF00F9AC6D /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				5DD75DD02B27211C00BED200 /* LogHelper.h */,
+				5D4525612B3AB77C00F9AC6D /* InputParserHelper.h */,
+			);
+			path = Helper;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

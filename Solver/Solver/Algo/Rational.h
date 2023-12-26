@@ -10,13 +10,14 @@
 
 #include <iostream>
 #include <stdexcept>
-#include "BigInt.h"
+#include "bigint.h"
+
+// Represents big Rational numbers like A/B.
 
 class Rational {
 private:
     bigint numerator;
     bigint denominator;
-
 public:
     // Constructors
     Rational() : numerator(0), denominator(1) {}
