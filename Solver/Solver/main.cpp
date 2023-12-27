@@ -24,7 +24,6 @@ int main(int argc, const char * argv[]) {
 #ifdef LOCAL
     ifstream in("input.txt");
     std::cin.tie(0);
-    
     std::cin.rdbuf(in.rdbuf());
 #endif
     
