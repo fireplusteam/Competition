@@ -4,10 +4,14 @@
 #include <set>
 #include <algorithm>
 #include <sstream>
-#include <stdio.h>
+#include <cstdio>
 #include <queue>
 #include <cassert>
 #include <functional>
+#include <unordered_map>
+#include <deque>
+#include <unordered_set>
+#include <complex>
 
 #ifndef LOCAL
 class debug {public: debug(bool isend = true){} template<class c> debug& operator<<(const c&) { return *this; }};
