@@ -17,6 +17,7 @@
                 "-Wconversion",
                 "-Wno-sign-conversion",
                 "-fsanitize=address",
+                "-DLOCAL"
             ],
             "options": {
                 "cwd": "${fileDirname}"
