@@ -1,7 +1,8 @@
 {
     "files.associations": {
-        "vector": "cpp",
-        "istream": "cpp",
-        "iosfwd": "cpp"
-    }
+        "*.py": "python",
+        "*.cpp": "cpp"
+    },
+    "vim.autoSwitchInputMethod.enable": false,
+    "editor.lineNumbers": "relative"
 }

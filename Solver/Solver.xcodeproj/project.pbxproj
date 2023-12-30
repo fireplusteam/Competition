@@ -284,7 +284,7 @@
 					"$(inherited)",
 					LOCAL,
 				);
-				OTHER_CFLAGS = "\"-Wl,-stack_size -Wl,0x10000000000\"";
+				OTHER_CFLAGS = "\"-Wl,-stack_size -Wl,0x1000000000\"";
 				PRODUCT_BUNDLE_IDENTIFIER = "buttom-line";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -295,7 +295,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				GCC_PREPROCESSOR_DEFINITIONS = LOCAL;
-				OTHER_CFLAGS = "\"-Wl,-stack_size -Wl,0x10000000000\"";
+				OTHER_CFLAGS = "\"-Wl,-stack_size -Wl,0x1000000000\"";
 				PRODUCT_BUNDLE_IDENTIFIER = "buttom-line";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

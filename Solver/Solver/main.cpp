@@ -12,6 +12,11 @@
 #include <deque>
 #include <unordered_set>
 #include <complex>
+#include <list>
+#include <bitset>
+#include <ctime>
+#include <random>
+#include <stack>
 
 #ifndef LOCAL
 class debug {public: debug(bool isend = true){} template<class c> debug& operator<<(const c&) { return *this; }};
