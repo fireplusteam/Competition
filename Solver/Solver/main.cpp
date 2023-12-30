@@ -27,6 +27,10 @@ class debug {public: debug(bool isend = true){} template<class c> debug& operato
 #endif
 
 using namespace std;
+void solve() {
+    // solution is here
+    
+}
 
 int main(int argc, const char * argv[]) {
     ios_base::sync_with_stdio(false);
@@ -36,5 +40,10 @@ int main(int argc, const char * argv[]) {
     std::cin.rdbuf(in.rdbuf());
 #endif
     
+    int T;
+    cin >> T;
+    for(int t = 0;t < T;++t) {
+        solve();
+    }
     return 0;
 }
