@@ -17,6 +17,7 @@
 #include <ctime>
 #include <random>
 #include <stack>
+#include <optional>
 
 #ifndef LOCAL
 class debug {public: debug(bool isend = true){} template<class c> debug& operator<<(const c&) { return *this; }};
