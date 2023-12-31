@@ -16,6 +16,19 @@
         "externalConsole": false,
         "MIMode": "lldb",
         "preLaunchTask": "C/C++: clang++ build active file"
+      },
+      { // install GNU to mac terminal -> brew install gcc@12
+        "name": "C/C++: GNU",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "${fileDirname}/${fileBasenameNoExtension}",
+        "args": [],
+        "stopAtEntry": false,
+        "cwd": "${workspaceFolder}",
+        "environment": [],
+        "externalConsole": false,
+        "MIMode": "lldb",
+        "preLaunchTask": "C/C++: GNU build active file"
       }
     ]
   }

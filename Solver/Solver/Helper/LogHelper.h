@@ -45,8 +45,8 @@ template < class c > auto dud(c* x) -> decltype(cerr << *x, 0);
 template < class c > char dud(...);
 struct debug {
     bool isend; 
-    debug(bool isend = true) {
-        this->isend = isend;
+    debug(bool _isend = true) {
+        this->isend = _isend;
     }
 
     ~debug() { 

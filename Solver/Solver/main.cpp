@@ -18,9 +18,21 @@
 #include <random>
 #include <stack>
 #include <optional>
+#if !defined(__clang__) && defined(__GNUC__)
+#include <ext/pb_ds/assoc_container.hpp> // Common file
+#include <ext/pb_ds/tree_policy.hpp> // Including tree_order_statistics_node_update
+#include <ext/pb_ds/detail/standard_policies.hpp>
+using namespace __gnu_pbds;
+#endif
+using namespace std;
+
+#if !defined(__clang__) && defined(__GNUC__)
+template<class A> using ordered_set = tree<A, null_type, less<A>, rb_tree_tag, tree_order_statistics_node_update>;
+template<class Key, class Value> using ordered_map = tree<Key, Value, less<Value>, rb_tree_tag, tree_order_statistics_node_update>;
+#endif
 
 #ifndef LOCAL
-class debug {public: debug(bool isend = true){} template<class c> debug& operator<<(const c&) { return *this; }};
+class debug {public: debug(bool isend = true){} template<class c> debug& operator<<(const c&) { retu;
 #define imie(...) ""
 #define endl "\n"
 #else
