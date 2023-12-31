@@ -32,9 +32,10 @@ template<class Key, class Value> using ordered_map = tree<Key, Value, less<Value
 #endif
 
 #ifndef LOCAL
-class debug {public: debug(bool isend = true){} template<class c> debug& operator<<(const c&) { retu;
+class debug {public: debug(bool isend = true){} template<class c> debug& operator<<(const c&) { return *this; }};
 #define imie(...) ""
 #define endl "\n"
+#define tabs(a) ""
 #else
 #include "Helpers.h"
 #endif
