@@ -44,6 +44,7 @@
                 "-Wall",
                 "-Wconversion",
                 "-Wno-sign-conversion",
+                "-fsanitize=address",
                 "-DLOCAL"
             ],
             "options": {
