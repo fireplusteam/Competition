@@ -18,17 +18,13 @@
 #include <random>
 #include <stack>
 #include <optional>
-#if !defined(__clang__) && defined(__GNUC__)
-#include <ext/pb_ds/assoc_container.hpp> // Common file
-#include <ext/pb_ds/tree_policy.hpp> // Including tree_order_statistics_node_update
-#include <ext/pb_ds/detail/standard_policies.hpp>
-using namespace __gnu_pbds;
-#endif
 using namespace std;
 
 #if !defined(__clang__) && defined(__GNUC__)
-template<class A> using ordered_set = tree<A, null_type, less<A>, rb_tree_tag, tree_order_statistics_node_update>;
-template<class Key, class Value> using ordered_map = tree<Key, Value, less<Key>, rb_tree_tag, tree_order_statistics_node_update>;
+#include<bits/extc++.h>
+using namespace __gnu_pbds;
+template <typename K, typename V, typename Comp = std::less<K>> using ordered_map = tree< K, V, Comp, rb_tree_tag, tree_order_statistics_node_update >; 
+template <typename K, typename Comp = std::less<K>> using ordered_set = ordered_map<K, null_type, Comp>;
 #endif
 
 #ifndef LOCAL
@@ -43,7 +39,7 @@ class debug {public: debug(bool isend = true){} template<class c> debug& operato
 using namespace std;
 void solve() {
     // solution is here
-    
+
 }
 
 int main(int argc, const char * argv[]) {
