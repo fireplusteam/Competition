@@ -28,7 +28,7 @@ using namespace std;
 
 #if !defined(__clang__) && defined(__GNUC__)
 template<class A> using ordered_set = tree<A, null_type, less<A>, rb_tree_tag, tree_order_statistics_node_update>;
-template<class Key, class Value> using ordered_map = tree<Key, Value, less<Value>, rb_tree_tag, tree_order_statistics_node_update>;
+template<class Key, class Value> using ordered_map = tree<Key, Value, less<Key>, rb_tree_tag, tree_order_statistics_node_update>;
 #endif
 
 #ifndef LOCAL
