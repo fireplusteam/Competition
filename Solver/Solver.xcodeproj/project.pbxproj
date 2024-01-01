@@ -34,6 +34,7 @@
 		5D5961642B3852E80005551A /* Rational.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Rational.h; sourceTree = "<group>"; };
 		5D5961652B3857EB0005551A /* bigint.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bigint.h; sourceTree = "<group>"; };
 		5D5961662B3858FE0005551A /* fft.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fft.h; sourceTree = "<group>"; };
+		5D7FAB492B42D3580015D01C /* Ext_Templates.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Ext_Templates.h; sourceTree = "<group>"; };
 		5DD75DD02B27211C00BED200 /* LogHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LogHelper.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -72,6 +73,7 @@
 				5D02FA302B19EEE70086CA32 /* main.cpp */,
 				5D02FA372B19F17E0086CA32 /* input.txt */,
 				5D2AFF6F2B3AFE0E007B6AAF /* Helpers.h */,
+				5D7FAB492B42D3580015D01C /* Ext_Templates.h */,
 			);
 			path = Solver;
 			sourceTree = "<group>";
