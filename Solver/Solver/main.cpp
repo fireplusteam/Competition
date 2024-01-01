@@ -1,12 +1,6 @@
 #if !defined(__clang__) && defined(__GNUC__)
 #include <bits/stdc++.h>
-#include <ext/pb_ds/assoc_container.hpp> // Common file
-#include <ext/pb_ds/tree_policy.hpp> // Including tree_order_statistics_node_update
-#include <ext/pb_ds/detail/standard_policies.hpp>
 using namespace std;
-using namespace __gnu_pbds;
-template <typename K, typename V, typename Comp = std::less<K>> using ordered_map = tree< K, V, Comp, rb_tree_tag, tree_order_statistics_node_update >; 
-template <typename K, typename Comp = std::less<K>> using ordered_set = ordered_map<K, null_type, Comp>;
 #endif
 
 #ifndef LOCAL
