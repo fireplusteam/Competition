@@ -9,9 +9,8 @@ template <typename K, typename Comp = std::less<K>> using ordered_set = ordered_
 #endif
 
 #ifndef LOCAL
-class debug {public: debug(bool isend = true){} template<class c> debug& operator<<(const c&) { return *this; }};
+class debug{public:debug(bool isend=true){}template<class c>debug&operator<<(c&){return *this;}debug&operator<<(ostream&(*f)(ostream&)){return *this;}};
 #define imie(...) ""
-#define endl "\n"
 #define tabs(a) ""
 #else
 #include "Helpers.h"

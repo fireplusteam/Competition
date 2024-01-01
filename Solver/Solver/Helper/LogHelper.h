@@ -113,10 +113,15 @@ struct debug {
         }
         return *this << ")";
     }
+    
+    // Specialization for std::endl
+    debug& operator<<( ostream&(*f)(ostream&) ) {
+        std::cout << f;
+        return *this;
+    }
 };
 
 #define imie(...) " [" << #__VA_ARGS__ ": " << (__VA_ARGS__) << "] "
-#define endl "\n"
 
 template<typename T, size_t n, typename std::enable_if<!std::is_same<T, char>::value, int>::type = 0>
 debug& operator<<(const debug d, const T (&a)[n]) {
