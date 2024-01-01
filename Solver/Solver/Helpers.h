@@ -8,6 +8,30 @@
 #ifndef Helpers_h
 #define Helpers_h
 
+#include <iostream>
+#include <fstream>
+#include <map>
+#include <set>
+#include <algorithm>
+#include <sstream>
+#include <cstdio>
+#include <queue>
+#include <cassert>
+#include <functional>
+#include <unordered_map>
+#include <deque>
+#include <unordered_set>
+#include <complex>
+#include <list>
+#include <bitset>
+#include <ctime>
+#include <random>
+#include <stack>
+#include <optional>
+#include <regex>
+
+using namespace std;
+
 /// START: Algos helper
 #ifdef LOCAL
 //#include "Algo/Rational.h"

@@ -10,9 +10,9 @@
 
 #include <iostream>
 #include <vector>
-#include <set>
 #include <sstream>
 #include <tuple>
+#include <optional>
 
 using namespace std;
 
@@ -102,6 +102,16 @@ struct debug {
                 *this << ", " << *it;
             }
         return * this << "]";
+    }
+    
+    template< class c > debug & operator<<( const optional< c >& d) {
+        *this << "optional(";
+        if(d.has_value()) {
+            *this << d.value();
+        } else {
+            *this << "null";
+        }
+        return *this << ")";
     }
 };
 
