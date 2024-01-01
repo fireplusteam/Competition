@@ -7,6 +7,15 @@
             ],
             "defines": [],
             "compilerPath": "/opt/homebrew/bin/g++-12",
+            "compilerArgs": [
+                "-DLOCAL",
+                "-Wshadow",
+                "-Wall",
+                "-Wconversion",
+                "-Wno-sign-conversion",
+                "-Wno-unused-result",
+                "-Werror=return-type"
+            ],
             "cStandard": "c11",
             "cppStandard": "c++20",
             "intelliSenseMode": "gcc-x64"
