@@ -7,7 +7,9 @@
 
 #ifndef Helpers_h
 #define Helpers_h
-
+#if !defined(__clang__) && defined(__GNUC__)
+#include <bits/stdc++.h>
+#else
 #include <iostream>
 #include <fstream>
 #include <map>
@@ -29,6 +31,7 @@
 #include <stack>
 #include <optional>
 #include <regex>
+#endif
 
 using namespace std;
 
