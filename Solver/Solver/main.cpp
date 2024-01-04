@@ -4,7 +4,7 @@ using namespace std;
 #endif
 
 #ifndef LOCAL
-class debug{public:debug(bool isend=true){}template<class c>debug&operator<<(c&){return *this;}debug&operator<<(ostream&(*f)(ostream&)){return *this;}};
+class debug{public:debug(bool=false){}template<class c>debug&operator<<(c&){return *this;}debug&operator<<(ostream&(*f)(ostream&)){return *this;}};
 #define imie(...) ""
 #define tabs(a) ""
 #else
