@@ -38,6 +38,13 @@
             "windows": {
                 "MIMode": "gdb",
                 "miDebuggerPath": "C:\\MinGw\\bin\\gdb.exe"
+            },
+            "logging": {
+                "programOutput": true,
+                "exceptions": true,
+                "moduleLoad": false,
+                "trace": false,
+                "traceResponse": false
             }
         },
         {
