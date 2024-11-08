@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-undef
 const chai = require("chai");
 const assert = chai.assert;
 chai.config.truncateThreshold = 0;
@@ -5,7 +6,10 @@ chai.config.truncateThreshold = 0;
 /// SOLUTION IS HERE FROM CODE WARS
 
 function likes(ap) {
-    return "no one likes this ";
+    const a = 0;
+    b = 10;
+    // a += "2";
+    return "no one likes this";
 }
 
 /// TESTS ARE HERE

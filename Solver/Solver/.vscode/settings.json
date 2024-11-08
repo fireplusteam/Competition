@@ -6,7 +6,8 @@
     "vim.autoSwitchInputMethod.enable": false,
     "editor.lineNumbers": "relative",
     "cSpell.words": [
-        "imie"
+        "imie",
+        "Parens"
     ],
     "editor.formatOnSave": true,
 }
