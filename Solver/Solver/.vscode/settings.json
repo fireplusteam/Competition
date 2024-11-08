@@ -7,7 +7,34 @@
     "editor.lineNumbers": "relative",
     "cSpell.words": [
         "imie",
-        "Parens"
+        "Parens",
+        "Struct"
     ],
+    "search.useIgnoreFiles": false,
     "editor.formatOnSave": true,
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        "**/main_js.dSYM": true,
+        "**/main.dSYM": true,
+        "**/node_modules": true,
+        "**/.vscode/launch.dSYM": true
+    },
+    "search.exclude": {
+        "**/bower_components": true,
+        "**/*.code-search": true,
+        "**/main_js.dSYM": true,
+        "**/main.dSYM": true,
+        "**/node_modules": true,
+        "**/.vscode/launch.dSYM": true
+    },
+    "cmake.configureOnOpen": false,
+    "editor.detectIndentation": false,
+    "C_Cpp.clang_format_style": "file:${workspaceFolder}/.clang-format",
+    "C_Cpp.autocomplete": "default",
+    "C_Cpp.codeAnalysis.runAutomatically": true,
 }
