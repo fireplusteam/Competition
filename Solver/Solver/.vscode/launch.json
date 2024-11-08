@@ -18,7 +18,7 @@
             "preLaunchTask": "C/C++: clang++ build active file"
         },*/
         { // install GNU to mac terminal -> brew install gcc@12
-            "name": "C/C++: GNU",
+            "name": "C/C++: GNU: Main",
             "type": "cppdbg",
             "request": "launch",
             "program": "${fileDirname}/${fileBasenameNoExtension}",
@@ -39,6 +39,23 @@
                 "MIMode": "gdb",
                 "miDebuggerPath": "C:\\MinGw\\bin\\gdb.exe"
             }
+        },
+        {
+            "name": "JavaScript: Main",
+            "program": "${workspaceFolder}/main_js.js",
+            "request": "launch",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "node",
+            "outputCapture": "std"
+        },
+        {
+            "name": "Python Debugger: Main",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/main_py.py",
+            "console": "integratedTerminal"
         }
     ]
 }

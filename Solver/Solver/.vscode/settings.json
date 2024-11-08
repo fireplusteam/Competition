@@ -4,5 +4,9 @@
         "*.cpp": "cpp"
     },
     "vim.autoSwitchInputMethod.enable": false,
-    "editor.lineNumbers": "relative"
+    "editor.lineNumbers": "relative",
+    "cSpell.words": [
+        "imie"
+    ],
+    "editor.formatOnSave": true,
 }

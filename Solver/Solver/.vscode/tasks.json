@@ -6,7 +6,8 @@
             "command": "g++-12",
             "args": [
                 "-g",
-                "${file}",
+                // "${file}", // to make it to build any active file
+                "${workspaceFolder}/main.cpp",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}",
                 "-std=c++20",
