@@ -22,8 +22,6 @@ public:
     #include "Helpers.h"
 #endif
 
-#include "Ext_Templates.h"
-
 using namespace std;
 void solve() {
     // solution is here

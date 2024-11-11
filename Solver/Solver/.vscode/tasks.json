@@ -7,7 +7,7 @@
             "args": [
                 "-g",
                 // "${file}", // to make it to build any active file
-                "${workspaceFolder}/main.cpp",
+                "${workspaceFolder}/src/c++/main.cpp",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}",
                 "-std=c++23",
