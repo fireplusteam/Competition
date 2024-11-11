@@ -9,7 +9,7 @@
                 // "${file}", // to make it to build any active file
                 "${workspaceFolder}/src/c++/main.cpp",
                 "-o",
-                "${fileDirname}/${fileBasenameNoExtension}",
+                "${workspaceFolder}/.build/${fileBasenameNoExtension}",
                 "-std=c++23",
                 "-Wshadow",
                 "-Wall",
