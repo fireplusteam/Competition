@@ -10,7 +10,7 @@ import sys
 import fileinput, re
 
 if DEBUG:
-    file_path = "input.txt"
+    file_path = "input/input.txt"
     sys.stdin = open(file_path, 'r')
 
 T = int(input())

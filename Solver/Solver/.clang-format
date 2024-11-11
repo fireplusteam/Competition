@@ -70,11 +70,11 @@ AlignConsecutiveBitFields:
 #   AcrossComments: true
 #   AlignCompound: true
 
-# AlignConsecutiveMacros:
-#   Enabled: true
-#   AcrossEmptyLines: true
-#   AcrossComments: true
-#   AlignCompound: true
+AlignConsecutiveMacros:
+    Enabled: true
+    AcrossEmptyLines: false
+    AcrossComments: false
+    AlignCompound: false
 
 # AlignConsecutiveShortCaseStatements:
 #   Enabled: true
@@ -92,7 +92,7 @@ AllowShortCaseLabelsOnASingleLine: false
 KeepEmptyLinesAtTheStartOfBlocks: true
 
 # Indent nested PP directives.
-IndentPPDirectives: AfterHash
+IndentPPDirectives: BeforeHash
 
 # Include blocks style
 IncludeBlocks: Preserve
@@ -116,3 +116,10 @@ PenaltyReturnTypeOnItsOwnLine: 100
 PenaltyBreakAssignment: 100
 PenaltyBreakBeforeFirstCallParameter: 0
 PenaltyBreakOpenParenthesis: 0
+
+AllowShortBlocksOnASingleLine: false
+AllowShortCaseExpressionOnASingleLine: false
+AllowShortCompoundRequirementOnASingleLine: false
+AllowShortEnumsOnASingleLine: false
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false

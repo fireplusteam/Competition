@@ -3,14 +3,14 @@
         {
             "type": "cppbuild",
             "label": "C/C++: GNU build active file",
-            "command": "g++-12",
+            "command": "g++-14",
             "args": [
                 "-g",
                 // "${file}", // to make it to build any active file
                 "${workspaceFolder}/main.cpp",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}",
-                "-std=c++20",
+                "-std=c++23",
                 "-Wshadow",
                 "-Wall",
                 "-Wconversion",

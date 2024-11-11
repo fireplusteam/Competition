@@ -1,5 +1,5 @@
 #if !defined(__clang__) && defined(__GNUC__)
-#    include <bits/stdc++.h>
+    #include <bits/stdc++.h>
 using namespace std;
 #endif
 
@@ -16,11 +16,13 @@ public:
         return *this;
     }
 };
-#    define imie(...) ""
-#    define tabs(a) ""
+    #define imie(...) ""
+    #define tabs(a)   ""
 #else
-#    include "Helpers.h"
+    #include "Helpers.h"
 #endif
+
+#include "Ext_Templates.h"
 
 using namespace std;
 void solve() {
@@ -30,7 +32,7 @@ void solve() {
 int main(int argc, const char *argv[]) {
     ios_base::sync_with_stdio(true);
 #ifdef LOCAL
-    ifstream in("input.txt");
+    ifstream in("input/input.txt");
     std::cin.tie(0);
     std::cin.rdbuf(in.rdbuf());
 #endif
