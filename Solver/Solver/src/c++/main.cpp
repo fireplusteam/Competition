@@ -29,13 +29,13 @@ using namespace std;
 class Solver {
 
 public:
-    void solve() {
+    void solve(const string &testCase) {
         // solution is here
         int T;
         cin >> T;
         cout << imie(T) << endl;
         for (int t = 0; t < T; ++t) {
-            // cout << t << endl;
+            cout << t << endl;
         }
     }
 };
@@ -59,11 +59,13 @@ int main(int argc, const char *argv[]) {
         const auto fileName = string("../input/input_") + i + ".txt";
         config(fileName);
         Solver solver;
-        solver.solve();
+        solver.solve(i);
     };
     // Test Cases
     testSamples("1");
     testSamples("2");
+
+    testSamples("puzzle");
 
     return 0;
 }
