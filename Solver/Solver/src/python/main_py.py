@@ -22,7 +22,7 @@ class Solver:
 
 if DEBUG:
     def redirect(i):
-        file_path = f"../input/input_{i}.txt"
+        file_path = f"input_{i}.txt"
         sys.stdin = open(file_path, 'r')
     
     def testCase(i):

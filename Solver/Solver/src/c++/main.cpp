@@ -56,7 +56,7 @@ int main(int argc, const char *argv[]) {
     auto testSamples = [&config](const string &i) {
         cout << "----------------------------------------------" << endl;
         cout << "Test Case #" << i << ":" << endl;
-        const auto fileName = string("../input/input_") + i + ".txt";
+        const auto fileName = string("input_") + i + ".txt";
         config(fileName);
         Solver solver;
         solver.solve(i);

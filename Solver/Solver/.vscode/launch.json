@@ -24,7 +24,7 @@
             "program": "${workspaceFolder}/.build/${fileBasenameNoExtension}",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "${workspaceFolder}/src/c++",
+            "cwd": "${workspaceFolder}/input",
             "environment": [],
             "externalConsole": false,
             "preLaunchTask": "C/C++: GNU build active file",
@@ -63,7 +63,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/src/python/main_py.py",
             "console": "integratedTerminal",
-            "cwd": "${workspaceFolder}/src/python/"
+            "cwd": "${workspaceFolder}/src/input/"
         }
     ]
 }
