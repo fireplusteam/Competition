@@ -1,0 +1,7 @@
+{
+    "vim.autoSwitchInputMethod.enable": false,
+    "search.useIgnoreFiles": false,
+    "editor.formatOnSave": true,
+    "cmake.configureOnOpen": false,
+    "editor.detectIndentation": false,
+}

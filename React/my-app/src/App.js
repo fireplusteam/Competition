@@ -5,27 +5,25 @@ import React from "react";
 
 // SOLUTION IS HERE
 
-export const EggList = (props) => {
-  const list = props.eggs.map((egg, index) => (
-    <EasterEgg key={index} name={egg}></EasterEgg>
-  ));
-  return <ul>{list}</ul>
+export const EggList = props => {
+    const list = props.eggs.map((egg, index) => <EasterEgg key={index} name={egg}></EasterEgg>);
+    return <ul>{list}</ul>;
 };
 
-export const EasterEgg = (props) => {
-  return <li>{props.name}</li>
+export const EasterEgg = props => {
+    return <li>{props.name}</li>;
 };
 
 // TESTS ARE HERE
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <EggList eggs={["Lindt", "Cadbury", "Milka", "Maltesers"]} />
-      </header>
-    </div>
-  );
+    return (
+        <div className="App">
+            <header className="App-header">
+                <EggList eggs={["Lindt1_bla", "Cadbury", "Milka", "Maltesers"]} />
+            </header>
+        </div>
+    );
 }
 
 export default App;
