@@ -1,59 +1,28 @@
-import logo from "./logo.svg";
+// import logo from "./logo.svg";
 import "./App.css";
+
 import React from "react";
 
-export class States extends React.Component {
-  constructor(props) {
-    super();
-    this.state = {
-      united: (props.united),
-    };
-  }
+// SOLUTION IS HERE
 
-  unite() {
-    this.setState({
-      united: false,
-    });
-  }
+export const EggList = (props) => {
+  const list = props.eggs.map((egg, index) => (
+    <EasterEgg key={index} name={egg}></EasterEgg>
+  ));
+  return <ul>{list}</ul>
+};
 
-  render() {
-    let message = this.state.united
-      ? "Code for everyone"
-      : "Make America code again";
-    return <div className="status">{message}</div>;
-  }
-}
+export const EasterEgg = (props) => {
+  return <li>{props.name}</li>
+};
 
-function Root(props) {
-  let united = true;
-  const onClick = () => {
-    united = !united;
-  }
-  return (
-    <div>
-      <button onClick={onClick}>Change state</button>
-      <States united={united}></States>
-    </div>
-  );
-}
+// TESTS ARE HERE
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <Root></Root>
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <EggList eggs={["Lindt", "Cadbury", "Milka", "Maltesers"]} />
       </header>
     </div>
   );
