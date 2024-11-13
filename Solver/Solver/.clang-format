@@ -123,3 +123,6 @@ AllowShortCompoundRequirementOnASingleLine: false
 AllowShortEnumsOnASingleLine: false
 AllowShortIfStatementsOnASingleLine: Never
 AllowShortLoopsOnASingleLine: false
+
+InsertBraces: false
+InsertTrailingCommas: true
