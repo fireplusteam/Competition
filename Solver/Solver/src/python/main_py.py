@@ -13,6 +13,9 @@ import fileinput, re
 # Solution is here 
 
 class Solver:
+
+    def __init__(self):
+        pass
     
     def solve(self, testCase):
         T = int( input())
