@@ -24,7 +24,7 @@
             "program": "${workspaceFolder}/.build/${fileBasenameNoExtension}",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "${workspaceFolder}/input",
+            "cwd": "${workspaceFolder}/src/input",
             "environment": [],
             "externalConsole": false,
             "preLaunchTask": "C/C++: GNU build active file",
