@@ -7,10 +7,16 @@ import pprint
 from queue import Queue
 from collections import deque
 from collections import OrderedDict
+from collections import Counter
+from sortedcontainers import SortedDict
+from sortedcontainers import SortedSet
+from sortedcontainers import SortedList
+
 import sys
 import fileinput, re
 
 # Solution is here 
+
 
 class Solver:
 
@@ -18,14 +24,14 @@ class Solver:
         pass
     
     def solve(self, testCase):
-        T = int( input())
-        print(T)
-
+        lines  = sys.stdin.read()
+        res = 0 # here is method
+        print(res)
 
 
 if DEBUG:
     def redirect(i):
-        file_path = f"input_{i}.txt"
+        file_path = f"src/input/input_{i}.txt"
         sys.stdin = open(file_path, 'r')
     
     def testCase(i):
@@ -38,6 +44,6 @@ if DEBUG:
     
 #  Test Cases
 testCase(1)
-testCase(2)
+# testCase(2)
 
 testCase("puzzle")
