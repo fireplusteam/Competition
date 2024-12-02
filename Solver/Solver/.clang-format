@@ -125,4 +125,3 @@ AllowShortIfStatementsOnASingleLine: Never
 AllowShortLoopsOnASingleLine: false
 
 InsertBraces: false
-InsertTrailingCommas: true
