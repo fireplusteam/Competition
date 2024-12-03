@@ -62,7 +62,7 @@
             "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/src/python/main_py.py",
-            "console": "integratedTerminal",
+            "console": "internalConsole",
             "cwd": "${workspaceFolder}"
         }
     ]
