@@ -63,7 +63,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/src/python/main_py.py",
             "console": "integratedTerminal",
-            "cwd": "${workspaceFolder}/src/input/"
+            "cwd": "${workspaceFolder}"
         }
     ]
 }
