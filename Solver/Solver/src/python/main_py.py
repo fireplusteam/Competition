@@ -24,19 +24,18 @@ from sortedcontainers import SortedList
 
 import sys
 import fileinput, re
-import re
 
-# Solution is here
 
 class Solver:
     def __init__(self):
         pass
     
     def solve(self, testCase):
-        lines  = sys.stdin.read()
-        res = CHANGE_HERE_WITH_METHOD(lines) # here is method
+        lines  = sys.stdin.read().strip()
+        ans = 0
+        # Solution is here
         
-        print(res)
+        return ans
 
 
 if DEBUG:
@@ -49,11 +48,12 @@ if DEBUG:
         print(f"Test Case #{i}:")
         redirect(i)
         solver = Solver()
-        solver.solve(i)
+        ans = solver.solve(i)
+        print(f"  #{i} Answer = {ans}")
 
     
 #  Test Cases
-# testCase(1)
+testCase(1)
 # testCase(2)
 
 # ------------------------------------ download input script
@@ -76,6 +76,8 @@ def download_content():
                 else:
                     file.write("")
                     puzzle.write(b"")
+        else:
+            file.write(identity)
 
 download_content()
 testCase("puzzle")
