@@ -17,6 +17,7 @@ from queue import PriorityQueue
 from collections import deque
 from collections import OrderedDict
 from collections import Counter
+from collections import defaultdict
 
 from sortedcontainers import SortedDict
 from sortedcontainers import SortedSet
@@ -31,7 +32,7 @@ class Solver:
         pass
     
     def solve(self, testCase):
-        lines  = sys.stdin.read().strip()
+        lines  = sys.stdin.read().strip().split("\n")
         ans = 0
         # Solution is here
         
