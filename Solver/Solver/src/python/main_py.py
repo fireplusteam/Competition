@@ -1,10 +1,11 @@
 __YEAR__ = 2024
-__DAY__ = 4
+__DAY__ = 6
 
 DEBUG = True
 # DEBUG = False 
 #-----------------------------------------------------
-import cmath
+import math
+import os
 
 import copy
 import queue
@@ -44,20 +45,33 @@ class Solver:
 if DEBUG:
     def redirect(i):
         file_path = f"src/input/input_{i}.txt"
+        with open(file_path, "r") as file:
+            r = file.read()
+            if len(r) == 0:
+                return False
         sys.stdin = open(file_path, 'r')
+        return True
     
     def testCase(i):
         print("----------------------------------------------")
         print(f"Test Case #{i}:")
-        redirect(i)
+        if not redirect(i):
+            print(f"  #{i} Skipped")
+            return
         solver = Solver()
+        import time
+        st = time.time()
         ans = solver.solve(i)
         print(f"  #{i} Answer = {ans}")
+        print(f"  #{i} Time = {time.time() - st: .5f}s")
 
     
 #  Test Cases
 testCase(1)
 # testCase(2)
+# testCase(3)
+# testCase(4)
+# testCase(5)
 
 # ------------------------------------ download input script
 # python3 src/python/helper/get_input.py --year=2024 --day=3 > src/input/input_puzzle.txt
