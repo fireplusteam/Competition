@@ -26,7 +26,8 @@ import fileinput, re
 
 import utils
 
-
+# to run in Terminal: python3 src/python/main_py.py
+# if output is to large: python3 src/python/main_py.py | less -R
 class Solver:
     def __init__(self):
         pass
