@@ -25,17 +25,20 @@ def TwoD(rows, columns, def_val):
     return [[def_val for _ in range(columns)] for _ in range(rows)]
 
     
-def debugPrint(field):
+def debugPrint(*fields):
     """
     Print list of string or list of list of string by concatenating it to grid
     """
-    if isinstance(field, list) and len(field) > 0 and isinstance(field[0], str):
-        print("\n".join(field))
-    elif isinstance(field, list) and len(field) > 0 and isinstance(field[0], list) and len(field[0][0]) > 0 and isinstance(field[0][0], str):
-        l = ["".join(x) for x in field]
-        print("\n".join(l)) 
-    else:
-        print(field)
+    for field in fields:
+        if isinstance(field, list) and len(field) > 0 and isinstance(field[0], str):
+            print("\n".join(field))
+        elif isinstance(field, tuple) and len(list(field)) > 0 and isinstance(list(field)[0], str):
+            print("".join(list(field)))
+        elif isinstance(field, list) and len(field) > 0 and isinstance(field[0], list) and len(field[0][0]) > 0 and isinstance(field[0][0], str):
+            l = ["".join(x) for x in field]
+            print("\n".join(l)) 
+        else:
+            print(field)
 
 
 # Input Parser------------------------------------------------------------------------------------------------------
