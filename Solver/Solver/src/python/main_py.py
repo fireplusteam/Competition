@@ -1,6 +1,6 @@
 __YEAR__ = 2024
 __DAY__ = 6
-#-----------------------------------------------------
+# -----------------------------------------------------
 import math
 import os
 
@@ -22,21 +22,24 @@ from sortedcontainers import SortedSet
 from sortedcontainers import SortedList
 
 import sys
-import fileinput, re
+import fileinput
+import re
 
 import utils
 
 # to run in Terminal: python3 src/python/main_py.py
 # if output is to large: python3 src/python/main_py.py | less -R
+
+
 class Solver:
     def __init__(self):
         pass
-    
+
     def solve(self, testCase: int, input: str):
-        lines  = input.strip().split("\n")
+        lines = input.strip().split("\n")
         ans = 0
         # Solution is here
-        
+
         return ans
 
 
@@ -45,6 +48,7 @@ class Solver:
 def testCase(i):
     solver = Solver()
     utils.testCase(i, lambda i, input: solver.solve(i, input))
+
 
 testCase(1)
 # testCase(2)
