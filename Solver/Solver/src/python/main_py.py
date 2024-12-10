@@ -1,5 +1,5 @@
 __YEAR__ = 2024
-__DAY__ = 6
+__DAY__ = 10
 # -----------------------------------------------------
 import math
 import os
@@ -20,6 +20,7 @@ from collections import defaultdict
 from sortedcontainers import SortedDict
 from sortedcontainers import SortedSet
 from sortedcontainers import SortedList
+import heapq
 
 import sys
 import fileinput
