@@ -1,6 +1,7 @@
 __YEAR__ = 2024
 __DAY__ = 10
 # -----------------------------------------------------
+from functools import cache
 import math
 import os
 
