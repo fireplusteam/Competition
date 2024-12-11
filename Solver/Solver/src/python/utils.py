@@ -1,6 +1,7 @@
 import subprocess
 import os
 import sys
+from collections.abc import Iterable
 
 
 def FourD(rows, columns, z, w, def_val):
@@ -25,6 +26,36 @@ def TwoD(rows, columns, def_val):
     array[rows][columns]
     """
     return [[def_val for _ in range(columns)] for _ in range(rows)]
+
+
+def to_deep_tuple(*keys):
+    """
+    used to convert any list/dict/set based tree object to not mutable tuple which can used as a key in set of dict
+    used for complex data structures. It's slower but guarantee that the entire object of dict/set/list is hashed
+    """
+    def to_key(key):
+        if isinstance(key, str):
+            return key
+        if isinstance(key, Iterable):
+            if isinstance(key, dict):
+                l = [(to_key(k), to_deep_tuple(v))
+                     for k, v in key.items()]
+            else:
+                l = [to_key(x) for x in key]
+            if isinstance(key, set):  # unordered set
+                l.sort()
+            return tuple(l)
+        else:
+            return str(key)
+    return tuple([to_key(key) for key in keys])
+
+
+def to_deep_hash(*key):
+    """
+    Return a hash of all object in the tree
+    used for complex data structures
+    """
+    return hash(to_deep_tuple(*key))
 
 
 def debugPrint(*args, **kwargs):
@@ -187,6 +218,7 @@ def download_content(__YEAR__, __DAY__):
 
 if __name__ == "__main__":
     # Test Utils
+    st = set(["s1", "s2"])
     dp = {
         "one": {
             "wow": 10,
