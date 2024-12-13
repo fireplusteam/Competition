@@ -1,3 +1,4 @@
+import re
 import subprocess
 import os
 import sys
@@ -56,6 +57,22 @@ def to_deep_hash(*key):
     used for complex data structures
     """
     return hash(to_deep_tuple(*key))
+
+
+def split_by_strings(delimiters: list[str], string: str):
+    """
+    split input string by multiple delimiters regexp like
+    'Some: +10, 10: works like 20'
+    split_by_strings([r"Some: \+", r",", r": work like "])
+    returns 10 10 10 
+    and trim all empty results
+    """
+    if isinstance(delimiters, str):
+        pattern = re.compile(delimiters)
+    else:
+        pattern = re.compile("|".join(delimiters))
+    l = [x for x in re.split(pattern, string) if len(x) > 0]
+    return l
 
 
 def debugPrint(*args, **kwargs):
