@@ -27,6 +27,8 @@ import sys
 import fileinput
 import re
 
+import z3
+
 import utils
 
 # to run in Terminal: python3 src/python/main_py.py
