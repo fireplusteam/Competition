@@ -54,12 +54,14 @@ def testCase(i):
     utils.testCase(i, lambda i, input: solver.solve(i, input))
 
 
-testCase(1)
-# testCase(2)
-# testCase(3)
-# testCase(4)
-# testCase(5)
+with open("output.txt", "w+", 1) as file:
+    sys.stdout = file
 
+    testCase(1)
+    # testCase(2)
+    # testCase(3)
+    # testCase(4)
+    # testCase(5)
 
-utils.download_content(__YEAR__, __DAY__)
-testCase("puzzle")
+    utils.download_content(__YEAR__, __DAY__)
+    testCase("puzzle")
