@@ -204,22 +204,35 @@ class writer:
     def write(self, text):
         for w in self.writers:
             w.write(text)
-            w.flush()
-        Path("output.txt").touch()
+        self.flush()
+
+    def flush(self):
+        for w in self.writers:
+            if hasattr(w, "closed") and not w.closed:
+                w.flush()
+            if hasattr(w, "name"):
+                Path(w.name).touch()
 
 
 def testCase(i, solver):
-    print("----------------------------------------------")
-    print(f"Test Case #{i}:")
 
-    if not (input := get_input(i)):
-        print(f"  #{i} Skipped")
-        return
-    import time
-    st = time.time()
-    ans = solver(i, input)
-    print(f"  #{i} Answer = {ans}")
-    print(f"  #{i} Time = {time.time() - st: .5f}s")
+    saved = sys.stdout
+    with open(f"src/output/output_{i}.txt", "w+") as file:
+        sys.stdout = writer(sys.stdout, file)
+
+        print("----------------------------------------------")
+        print(f"Test Case #{i}:")
+
+        if not (input := get_input(i)):
+            print(f"  #{i} Skipped")
+            sys.stdout = saved
+            return
+        import time
+        st = time.time()
+        ans = solver(i, input)
+        print(f"  #{i} Answer = {ans}")
+        print(f"  #{i} Time = {time.time() - st: .5f}s")
+        sys.stdout = saved
 
 
 # ------------------------------------ download input script
