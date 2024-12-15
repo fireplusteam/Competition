@@ -34,6 +34,8 @@ import utils
 # to run in Terminal: python3 src/python/main_py.py
 # if output is to large: python3 src/python/main_py.py | less -R
 
+# THIS CODE COTAINS A SMALL BUT BUT it returns a little bit overoptimistic result, so you still can get the right answer, just with drop a few first mins
+
 
 class Solver:
     def __init__(self):
@@ -47,6 +49,8 @@ class Solver:
         target = """#############
 #...........#
 ###A#B#C#D###
+  #A#B#C#D#
+  #A#B#C#D#
   #A#B#C#D#
   #########"""
         target = [[x for x in y] for y in target.split("\n")]
@@ -96,7 +100,7 @@ class Solver:
         best_ans = 1e100
 
         seen = {}
-        tall = 3
+        tall = 5
 
         def rec(cost, deep=0):
             nonlocal best_ans
@@ -114,12 +118,10 @@ class Solver:
                         while delta_j != 0:
                             nj += 1 if delta_j > 0 else -1
                             if field[ni][nj] != '.':
+                                nj -= 1 if delta_j > 0 else -1
                                 break
                             if nj == j_ind(field[i][j]):
-                                nj += 1 if delta_j > 0 else -1
                                 break
-                        if delta_j != 0:
-                            nj -= 1 if delta_j > 0 else -1
                         if nj != j_ind(field[i][j]):
                             continue
 
@@ -156,7 +158,6 @@ class Solver:
                 if best_ans > cost + seen[field_hash]:
                     # utils.debugPrint(field)
                     best_ans = cost + seen[field_hash]
-                    print("Found", best_ans)
                 restore()
                 return seen[field_hash] + pre_move_cost
             if best_ans <= cost:
@@ -181,6 +182,8 @@ class Solver:
                         if ni != 1:
                             continue
                         for dj in (-1, 1):
+                            if dj == 0:
+                                continue
                             nj = j
                             while True:
                                 nj += dj
@@ -194,7 +197,6 @@ class Solver:
                                     lr = rec(cost + cost_delta, deep + 1)
                                     ret = min(lr + cost_delta, ret)
                                     field[i][j], field[ni][nj] = field[ni][nj], field[i][j]
-                        continue
 
             restore()
             seen[field_hash] = ret
@@ -214,7 +216,7 @@ def testCase(i):
     utils.testCase(i, lambda i, input: solver.solve(i, input))
 
 
-testCase(1)
+# testCase(1)
 # testCase(2)
 # testCase(3)
 # testCase(4)
