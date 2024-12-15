@@ -35,23 +35,18 @@ import utils
 # if output is to large: python3 src/python/main_py.py | less -R
 
 
-class Solver:
-    def __init__(self):
-        pass
+def aoc_solver(testCase: int, input: str):
+    lines = input.strip().split("\n")
+    ans = 0
+    # Solution is here
 
-    def solve(self, testCase: int, input: str):
-        lines = input.strip().split("\n")
-        ans = 0
-        # Solution is here
-
-        return ans
+    return ans
 
 
 #  Test Cases -----------------------------------------------------------------------
 
 def testCase(i):
-    solver = Solver()
-    utils.testCase(i, lambda i, input: solver.solve(i, input))
+    utils.testCase(i, lambda i, input: aoc_solver(i, input))
 
 
 with open("src/output/output.txt", "w+") as file:

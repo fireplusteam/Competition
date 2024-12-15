@@ -215,7 +215,6 @@ class writer:
 
 
 def testCase(i, solver):
-
     saved = sys.stdout
     with open(f"src/output/output_{i}.txt", "w+") as file:
         sys.stdout = writer(sys.stdout, file)
