@@ -1,3 +1,4 @@
+from pathlib import Path
 import re
 import subprocess
 import os
@@ -194,27 +195,20 @@ def get_input(i):
     return r
 
 
-is_flush_started = False
+class writer:
+    """Used to write to file and stdout"""
+
+    def __init__(self, *writers):
+        self.writers = writers
+
+    def write(self, text):
+        for w in self.writers:
+            w.write(text)
+            w.flush()
+        Path("output.txt").touch()
 
 
 def testCase(i, solver):
-    global is_flush_started
-    import threading
-    import time
-    from pathlib import Path
-
-    def ffflush():
-        while True:
-            time.sleep(0.05)
-            if sys.stdout.closed:
-                break
-            # this's a workaround as vs code is not updating the file in editor file it's changed
-            Path("output.txt").touch()
-            sys.stdout.flush()
-
-    if not is_flush_started:
-        is_flush_started = True
-        threading.Thread(target=ffflush).start()
     print("----------------------------------------------")
     print(f"Test Case #{i}:")
 

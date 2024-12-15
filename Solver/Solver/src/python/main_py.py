@@ -54,8 +54,8 @@ def testCase(i):
     utils.testCase(i, lambda i, input: solver.solve(i, input))
 
 
-with open("output.txt", "w+", 1) as file:
-    sys.stdout = file
+with open("output.txt", "w+") as file:
+    sys.stdout = utils.writer(sys.stdout, file)
 
     testCase(1)
     # testCase(2)
