@@ -22,6 +22,7 @@ from sortedcontainers import SortedSet
 from sortedcontainers import SortedList
 import heapq
 import itertools
+from functools import cmp_to_key
 
 import sys
 import fileinput
@@ -45,8 +46,8 @@ def aoc_solver(testCase: int, input: str):
 
 #  Test Cases -----------------------------------------------------------------------
 
-def testCase(i):
-    utils.testCase(i, lambda i, input: aoc_solver(i, input))
+def testCase(i, expected=None):
+    utils.testCase(i, expected, lambda i, input: aoc_solver(i, input))
 
 
 with open("src/output/output.txt", "w+") as file:

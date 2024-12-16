@@ -76,20 +76,21 @@ def split_by_strings(delimiters: list[str], string: str):
     return l
 
 
+def print_to_string(*args, **kwargs):
+    import io
+    output = io.StringIO()
+    print(*args, file=output, **kwargs)
+    contents = output.getvalue()[:-1]
+    output.close()
+    return contents
+
+
 def debugPrint(*args, **kwargs):
     """
     Print list of string or list of list of string by concatenating it to grid
     l"123131" -> list like ["1", "2", "3", ...]
     t"123131" -> tuple like ("1", "2", "3", ...)
     """
-    import io
-
-    def print_to_string(*args, **kwargs):
-        output = io.StringIO()
-        print(*args, file=output, **kwargs)
-        contents = output.getvalue()[:-1]
-        output.close()
-        return contents
 
     def indent(rec):
         return "  ".join(["" for x in range(rec + 1)])
@@ -195,6 +196,13 @@ def get_input(i):
     return r
 
 
+class Colors:
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+
+
 class writer:
     """Used to write to file and stdout"""
 
@@ -202,19 +210,28 @@ class writer:
         self.writers = writers
 
     def write(self, text):
+        def filter(text: str):
+            if text.find(Colors.ENDC) != -1:
+                return text.replace(Colors.ENDC, "").replace(Colors.OKGREEN, "").replace(Colors.WARNING, "").replace(Colors.FAIL, "")
+            return text
         for w in self.writers:
-            w.write(text)
+            if hasattr(w, "name") and w.name != "<stdout>":
+                to_print = filter(text)
+                w.write(to_print)
+            else:
+                w.write(text)
         self.flush()
 
     def flush(self):
         for w in self.writers:
             if hasattr(w, "closed") and not w.closed:
                 w.flush()
-            if hasattr(w, "name"):
+            if hasattr(w, "name") and w.name != "<stdout>":
                 Path(w.name).touch()
 
 
-def testCase(i, solver):
+def testCase(i, expected, solver):
+
     saved = sys.stdout
     with open(f"src/output/output_{i}.txt", "w+") as file:
         sys.stdout = writer(sys.stdout, file)
@@ -229,7 +246,13 @@ def testCase(i, solver):
         import time
         st = time.time()
         ans = solver(i, input)
-        print(f"  #{i} Answer = {ans}")
+        if expected is not None:
+            if print_to_string(expected) != print_to_string(ans):
+                print(f"  {Colors.FAIL}#{i} Wrong Answer = {ans} 😡😡😡{Colors.ENDC}, Expected: {expected}")
+            else:
+                print(f"  {Colors.OKGREEN}#{i} Answer Correct = {ans} 🥳🥳🥳 {Colors.ENDC}")
+        else:
+            print(f"  {Colors.WARNING}#{i} Answer = {ans} 🤔🤔🤔, No expected answer Provided{Colors.ENDC}")
         print(f"  #{i} Time = {time.time() - st: .5f}s")
         sys.stdout = saved
 
