@@ -46,6 +46,7 @@ def aoc_solver(testCase: int, input: str):
 
 #  Test Cases -----------------------------------------------------------------------
 
+
 def testCase(i, expected=None):
     utils.testCase(i, expected, lambda i, input: aoc_solver(i, input))
 

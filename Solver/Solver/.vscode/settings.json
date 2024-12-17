@@ -138,6 +138,10 @@
     "pylint.enabled": true,
     "python.analysis.autoIndent": true,
     "autopep8.args": [
-        "--max-line-length=200"
+        "--max-line-length=160"
     ],
+    "black-formatter.args": [
+        "--line-length",
+        "160"
+    ]
 }
