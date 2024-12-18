@@ -69,6 +69,7 @@ class Solver:
                         to = chr(to + 3)
                         field[i][j] = to
             return field
+
         field = mapp(field)
         target = mapp(target)
 
@@ -80,12 +81,7 @@ class Solver:
                 return ord(ch) - ord("0")
             return -1
 
-        cost_map = {
-            "3": 1,
-            "5": 10,
-            "7": 100,
-            "9": 1000
-        }
+        cost_map = {"3": 1, "5": 10, "7": 100, "9": 1000}
 
         def to_hash(field):
             r = ""
@@ -117,7 +113,7 @@ class Solver:
                         delta_j = j_ind(field[i][j]) - j
                         while delta_j != 0:
                             nj += 1 if delta_j > 0 else -1
-                            if field[ni][nj] != '.':
+                            if field[ni][nj] != ".":
                                 nj -= 1 if delta_j > 0 else -1
                                 break
                             if nj == j_ind(field[i][j]):
@@ -127,17 +123,15 @@ class Solver:
 
                         while True:
                             ni += 1
-                            if field[ni][nj] != '.':
+                            if field[ni][nj] != ".":
                                 break
                         ni -= 1
-                        ss = sum(field[x][nj] == field[i][j]
-                                 for x in range(ni + 1, tall + 1))
+                        ss = sum(field[x][nj] == field[i][j] for x in range(ni + 1, tall + 1))
                         if ni >= 2 and ss == tall - ni:
                             should_continue = True
                             move_cost = cost_map[field[i][j]]
                             field[i][j], field[ni][nj] = field[ni][nj], field[i][j]
-                            pre_move_cost += abs(i - ni) * \
-                                move_cost + abs(j - nj) * move_cost
+                            pre_move_cost += abs(i - ni) * move_cost + abs(j - nj) * move_cost
                             moves.append((i, j, ni, nj))
             # utils.debugPrint(field)
             # print(deep, "------------------")
@@ -169,14 +163,13 @@ class Solver:
                 m = len(field[i])
                 for j in range(3, m, 2):
                     if field[i][j].isdigit():
-                        ss = sum(field[x][j] == field[i][j]
-                                 for x in range(i + 1, tall + 1))
+                        ss = sum(field[x][j] == field[i][j] for x in range(i + 1, tall + 1))
                         if j_ind(field[i][j]) == j and ss == tall - i:
                             continue
                         ni, nj = i, j
                         while True:
                             ni -= 1
-                            if field[ni][nj] != '.':
+                            if field[ni][nj] != ".":
                                 break
                         ni += 1
                         if ni != 1:
@@ -187,13 +180,14 @@ class Solver:
                             nj = j
                             while True:
                                 nj += dj
-                                if field[ni][nj] != '.':
+                                if nj == 3 or nj == 5 or nj == 7 or nj == 9:
+                                    continue
+                                if field[ni][nj] != ".":
                                     break
                                 if nj != j:
                                     move_cost = cost_map[field[i][j]]
                                     field[i][j], field[ni][nj] = field[ni][nj], field[i][j]
-                                    cost_delta = abs(
-                                        i - ni) * move_cost + abs(j - nj) * move_cost
+                                    cost_delta = abs(i - ni) * move_cost + abs(j - nj) * move_cost
                                     lr = rec(cost + cost_delta, deep + 1)
                                     ret = min(lr + cost_delta, ret)
                                     field[i][j], field[ni][nj] = field[ni][nj], field[i][j]
@@ -211,9 +205,10 @@ class Solver:
 
 #  Test Cases -----------------------------------------------------------------------
 
+
 def testCase(i):
     solver = Solver()
-    utils.testCase(i, lambda i, input: solver.solve(i, input))
+    utils.testCase(i, None, lambda i, input: solver.solve(i, input))
 
 
 # testCase(1)
