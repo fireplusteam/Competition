@@ -118,6 +118,10 @@
         "**/node_modules": true,
         "**/.vscode/launch.dSYM": true,
         "**/.build/": true,
+        "**/.venv/": true,
+        "**/__pycache__": true,
+        "**/xcode/": true,
+        "**/.logs/": true
     },
     "search.exclude": {
         "**/bower_components": true,
@@ -127,6 +131,10 @@
         "**/node_modules": true,
         "**/.vscode/launch.dSYM": true,
         "**/.build/": true,
+        "**/.venv/": true,
+        "**/__pycache__": true,
+        "**/xcode/": true,
+        "**/.logs/": true
     },
     "cmake.configureOnOpen": false,
     "editor.detectIndentation": false,
