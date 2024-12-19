@@ -22,7 +22,7 @@ public:
     #include "Helpers.h"
 #endif
 
-// #include "Ext_Templates.h"
+#include "Ext_Templates.h"
 
 using namespace std;
 
@@ -32,7 +32,7 @@ public:
     string solve(const string &testCase) {
         // solution is here
         string s;
-        int ans = 0;
+        long long ans = 0;
         while (getline(cin, s)) {
         }
 
@@ -53,14 +53,23 @@ int main(int argc, const char *argv[]) {
     };
 #endif
 
-    auto testSamples = [&config](const string &i) {
+    auto testSamples = [&config](const string &i, string expected = "") {
         cout << "----------------------------------------------" << endl;
         cout << "Test Case #" << i << ":" << endl;
         const auto fileName = string("input_") + i + ".txt";
         config(fileName);
         Solver solver;
         auto ans = solver.solve(i);
-        cout << "  #" << i << " Answer = " << ans << endl;
+        cout << "  #" << i;
+        if (expected == "") {
+            cout << " Answer = " << ans << " ," << " No expected answer Provided" << endl;
+        } else {
+            if (expected == ans) {
+                cout << " Answer Correct = " << ans << "" << endl;
+            } else {
+                cout << " Wrong Answer = " << ans << " , Expected: " << expected << endl;
+            }
+        }
     };
     // Test Cases
     testSamples("1");
