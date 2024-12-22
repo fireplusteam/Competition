@@ -265,12 +265,15 @@ class writer:
 
     def __init__(self, *writers):
         self.writers = writers
+        self.nums = 0
 
     def write(self, text):
         def filter(text: str):
             if text.find(Colors.ENDC) != -1:
                 return text.replace(Colors.ENDC, "").replace(Colors.OKGREEN, "").replace(Colors.WARNING, "").replace(Colors.FAIL, "")
             return text
+
+        self.nums += len(text)
 
         for w in self.writers:
             if hasattr(w, "name") and w.name != "<stdout>":
@@ -285,7 +288,8 @@ class writer:
             if hasattr(w, "closed") and not w.closed:
                 w.flush()
             if hasattr(w, "name") and w.name != "<stdout>":
-                Path(w.name).touch()
+                if self.nums < 8 * 1024 * 1024:  # 32 mb
+                    Path(w.name).touch()
 
 
 def testCase(i, expected, solver):
