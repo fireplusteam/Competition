@@ -3,7 +3,70 @@ import re
 import subprocess
 import os
 import sys
-from collections.abc import Iterable
+from collections.abc import Callable, Iterable
+import heapq
+
+
+class HeapObj(object):
+    def __init__(self, val, min=True, key: Callable | None = None):
+        self.val = val
+        self.key = key
+        self.min = min
+
+    def __lt__(self, other):
+        if self.key is not None:
+            if self.min:
+                return self.key(self.val) < self.key(other.val)
+            return self.key(self.val) > self.key(other.val)
+        if self.min:
+            return self.val < other.val
+        return self.val > other.val
+
+    def __eq__(self, other):
+        if self.key is not None:
+            return self.key(self.val) == self.key(other.val)
+        return self.val == other.val
+
+    def __str__(self):
+        return str(self.val)
+
+
+class MinHeap(object):
+    def __init__(self, array: Iterable | None, key: Callable | None = None):
+        self.h = []
+        self.key = key
+        if array is None:
+            return
+        for i in array:
+            self.put(i)
+
+    def put(self, x):
+        if self.key is not None:
+            x = HeapObj(x, min=True, key=self.key)
+        heapq.heappush(self.h, x)
+
+    def get(self):
+        val = heapq.heappop(self.h)
+        if isinstance(val, HeapObj):
+            return val.val
+        return val
+
+    def __getitem__(self, i):
+        return self.h[i]
+
+    def __len__(self):
+        return len(self.h)
+
+
+class MaxHeap(MinHeap):
+    def put(self, x):
+        heapq.heappush(self.h, HeapObj(x, min=False, key=self.key))
+
+    def get(self):
+        return heapq.heappop(self.h).val
+
+    def __getitem__(self, i):
+        return self.h[i].val
 
 
 def FourD(rows, columns, z, w, def_val):
@@ -35,13 +98,13 @@ def to_deep_tuple(*keys):
     used to convert any list/dict/set based tree object to not mutable tuple which can used as a key in set of dict
     used for complex data structures. It's slower but guarantee that the entire object of dict/set/list is hashed
     """
+
     def to_key(key):
         if isinstance(key, str):
             return key
         if isinstance(key, Iterable):
             if isinstance(key, dict):
-                l = [(to_key(k), to_deep_tuple(v))
-                     for k, v in key.items()]
+                l = [(to_key(k), to_deep_tuple(v)) for k, v in key.items()]
             else:
                 l = [to_key(x) for x in key]
             if isinstance(key, set):  # unordered set
@@ -49,6 +112,7 @@ def to_deep_tuple(*keys):
             return tuple(l)
         else:
             return str(key)
+
     return tuple([to_key(key) for key in keys])
 
 
@@ -78,6 +142,7 @@ def split_by_strings(delimiters: list[str], string: str):
 
 def print_to_string(*args, **kwargs):
     import io
+
     output = io.StringIO()
     print(*args, file=output, **kwargs)
     contents = output.getvalue()[:-1]
@@ -119,44 +184,38 @@ def debugPrint(*args, **kwargs):
 
     def dbPrint(field, rec_depth):
         if isinstance(field, dict):
-            l = [
-                (print_to_string(dbPrint(k, rec_depth + 1)), print_to_string(dbPrint(v, rec_depth + 1))) for k, v in field.items()
-            ]
+            l = [(print_to_string(dbPrint(k, rec_depth + 1)), print_to_string(dbPrint(v, rec_depth + 1))) for k, v in field.items()]
             r = []
             for x, y in l:
                 a = x
                 b = y
                 if not (x.find("\n") == -1):
-                    middle = ("\n" + indent(rec_depth + 1)).join(
-                        x.split(
-                            "\n"
-                        )
-                    )
+                    middle = ("\n" + indent(rec_depth + 1)).join(x.split("\n"))
                     a = f"\n{indent(rec_depth + 1)
                              }{middle}"
                 if not (y.find("\n") == -1 or startWithBracket(y)):
-                    middle = ("\n" + indent(rec_depth + 1) + empty(maxColumns(x))).join(
-                        y.split(
-                            "\n"
-                        )
-                    )
+                    middle = ("\n" + indent(rec_depth + 1) + empty(maxColumns(x))).join(y.split("\n"))
                     b = f"\n{indent(rec_depth + 1)
                              }{empty(maxColumns(x))}{middle}"
                 r.append((a, b))
             l = [f"{x}: {y}" for x, y in r]
             sep = f",\n{indent(rec_depth + 1)}"
-            return '{\n' + indent(rec_depth + 1) + f"{sep.join(l)}" + "\n" + indent(rec_depth) + "}"
-        elif (isinstance(field, list) or isinstance(field, tuple)):
+            return "{\n" + indent(rec_depth + 1) + f"{sep.join(l)}" + "\n" + indent(rec_depth) + "}"
+        elif isinstance(field, list) or isinstance(field, tuple):
             # flatten
             if len(field) > 0 and isinstance(field[0], str) and len(field[0]) == 1:
-                return f"{"l" if isinstance(field, list) else "t"}\"" + "".join(field) + "\""
-            elif len(list(field)) > 0 and (isinstance(field[0], tuple) or isinstance(field[0], list) or isinstance(field[0], str)) and isinstance(field[0][0], str) and len(field[0][0]) == 1:  # grid
+                return f'{"l" if isinstance(field, list) else "t"}"' + "".join(field) + '"'
+            elif (
+                len(list(field)) > 0
+                and (isinstance(field[0], tuple) or isinstance(field[0], list) or isinstance(field[0], str))
+                and isinstance(field[0][0], str)
+                and len(field[0][0]) == 1
+            ):  # grid
                 l = [dbPrint(x, rec_depth) for x in field]
                 return f"{"[" if isinstance(field, list) else "("}" + ",\n ".join(l) + ("]" if isinstance(field, list) else ")")
             else:
                 r = [dbPrint(x, rec_depth) for x in field]
-                r = [x if x.find("\n") == -1 or startWithBracket(x)
-                     else ("\n" + x) for x in r]
+                r = [x if x.find("\n") == -1 or startWithBracket(x) else ("\n" + x) for x in r]
 
                 r = ", ".join(r)
                 if isinstance(field, list):
@@ -164,16 +223,13 @@ def debugPrint(*args, **kwargs):
                 else:
                     return "(" + r + ")"
         elif isinstance(field, set):
-            l = [
-                print_to_string(dbPrint(k, rec_depth + 1)) for k in field
-            ]
-            l = [
-                y if y.find("\n") == -1 else f"{("\n" + indent(rec_depth + 1)).join(y.split("\n"))}" for y in l
-            ]
+            l = [print_to_string(dbPrint(k, rec_depth + 1)) for k in field]
+            l = [y if y.find("\n") == -1 else f"{("\n" + indent(rec_depth + 1)).join(y.split("\n"))}" for y in l]
             sep = f",\n{indent(rec_depth + 1)}"
-            return '{\n' + indent(rec_depth + 1) + f"{sep.join(l)}" + "\n" + indent(rec_depth) + "}"
+            return "{\n" + indent(rec_depth + 1) + f"{sep.join(l)}" + "\n" + indent(rec_depth) + "}"
         else:
             return print_to_string(field)
+
     if args:
         for field in args:
             print(dbPrint(field, 0))
@@ -184,6 +240,7 @@ def debugPrint(*args, **kwargs):
 
 
 # Input Parser------------------------------------------------------------------------------------------------------
+
 
 def get_input(i):
     file_path = f"src/input/input_{i}.txt"
@@ -197,10 +254,10 @@ def get_input(i):
 
 
 class Colors:
-    OKGREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-    ENDC = '\033[0m'
+    OKGREEN = "\033[92m"
+    WARNING = "\033[93m"
+    FAIL = "\033[91m"
+    ENDC = "\033[0m"
 
 
 class writer:
@@ -214,6 +271,7 @@ class writer:
             if text.find(Colors.ENDC) != -1:
                 return text.replace(Colors.ENDC, "").replace(Colors.OKGREEN, "").replace(Colors.WARNING, "").replace(Colors.FAIL, "")
             return text
+
         for w in self.writers:
             if hasattr(w, "name") and w.name != "<stdout>":
                 to_print = filter(text)
@@ -244,6 +302,7 @@ def testCase(i, expected, solver):
             sys.stdout = saved
             return
         import time
+
         st = time.time()
         ans = solver(i, input)
         if expected is not None:
@@ -269,8 +328,16 @@ def download_content(__YEAR__, __DAY__):
     with open(cache_path, "w+") as file:
         identity = f"Year:{__YEAR__},Day:{__DAY__}"
         if is_downloaded != identity:
-            process = subprocess.run(["python3", f"src/python/helper/get_input.py", f"--year={
-                                     __YEAR__}", f"--day={__DAY__}"], stdout=subprocess.PIPE)
+            process = subprocess.run(
+                [
+                    "python3",
+                    f"src/python/helper/get_input.py",
+                    f"--year={
+                                     __YEAR__}",
+                    f"--day={__DAY__}",
+                ],
+                stdout=subprocess.PIPE,
+            )
             with open("src/input/input_puzzle.txt", "wb+") as puzzle:
                 if not b"Please don't repeatedly request this endpoint" in process.stdout:
                     puzzle.write(process.stdout)
@@ -291,18 +358,15 @@ if __name__ == "__main__":
             "second": {
                 "third": ["o", "1", "2"],
                 "list": ["01", "-2"],
-                "forth": {
-                    "twoDims": [["1", "2"], ["3", "4"]],
-                    "tuple": ("1", "2")
-                },
+                "forth": {"twoDims": [["1", "2"], ["3", "4"]], "tuple": ("1", "2")},
                 "setKey": st,
                 "multi\nline": "wow",
-                ("10", "long key"): ("works\n")
+                ("10", "long key"): ("works\n"),
             },
             "tail": "tailed",
             tuple(st): ["set as a key", "ok"],
             "array": [[1, 2], [2, 3]],
-            "experimental": ("exp1", ([("1", "2")]), "exp2")
+            "experimental": ("exp1", ([("1", "2")]), "exp2"),
         }
     }
     debugPrint(dp)
