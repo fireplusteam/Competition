@@ -1,3 +1,4 @@
 sortedcontainers
 requests
 z3-solver
+networkx

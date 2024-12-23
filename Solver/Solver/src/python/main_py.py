@@ -23,12 +23,15 @@ from sortedcontainers import SortedList
 import heapq
 import itertools
 from functools import cmp_to_key
+import random
 
 import sys
 import fileinput
 import re
 
-import z3
+# third parties
+# import z3
+# import networkx
 
 import utils
 
@@ -50,6 +53,8 @@ def aoc_solver(testCase: int, input: str):
 def testCase(i, expected=None):
     utils.testCase(i, expected, lambda i, input: aoc_solver(i, input))
 
+
+sys.setrecursionlimit(10**6)
 
 with open("src/output/output.txt", "w+") as file:
     sys.stdout = utils.writer(sys.stdout, file)
