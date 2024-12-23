@@ -1,3 +1,4 @@
+import functools
 from pathlib import Path
 import re
 import subprocess
@@ -5,6 +6,7 @@ import os
 import sys
 from collections.abc import Callable, Iterable
 import heapq
+from typing import Literal
 
 
 class HeapObj(object):
@@ -56,6 +58,77 @@ class MinHeap(object):
 
     def __len__(self):
         return len(self.h)
+
+
+global_recursive_depth = 0
+
+
+def recursive_indent(indent):
+    return " |" * (indent)
+
+
+def printRec(
+    *values: object,
+    sep: str | None = " ",
+    end: str | None = "\n",
+    file=None,
+    flush: Literal[False] = False,
+):
+    should_print_indent = True
+    for t, value in enumerate(values):
+
+        def print_sep():
+            nonlocal should_print_indent
+            if should_print_indent:
+                print(indent, end=str_separator)
+                should_print_indent = False
+
+        indent = recursive_indent(global_recursive_depth)
+        str_separator = "" if len(indent) == 0 else " "
+
+        if isinstance(value, str):  # multiline
+            value = value.split("\n")
+            for i, r in enumerate(value):
+                print_sep()
+                print(r, end="", file=file, flush=flush)
+                if i != len(value) - 1:
+                    print("\n", end="")
+                    should_print_indent = True
+        else:
+            print_sep()
+            print(value, end="", file=file, flush=flush)
+        if t != len(values) - 1:
+            print(sep, end="")
+            if "\n" in sep:
+                should_print_indent = True
+    print("", end=end)
+
+
+def trace_recursive_calls(func):
+    """
+    trace recursive function with calls and returns
+    use like
+    @utils.trace_recursive_calls
+    def rec_func(...):
+        pass
+    """
+
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        global global_recursive_depth
+        nonlocal current_depth
+        indent = recursive_indent(global_recursive_depth + 1)
+        print(f"{indent[:-1]}{func.__name__} called: ({', '.join(str(arg) for arg in args)})" + " {")
+        global_recursive_depth += 1
+        current_depth += 1
+        result = func(*args, **kwargs)
+        global_recursive_depth -= 1
+        current_depth -= 1
+        print(f"{indent[:-1]}{func.__name__}({', '.join(str(arg) for arg in args)}) returning {result}" + " }")
+        return result
+
+    current_depth = 0
+    return wrapper
 
 
 class MaxHeap(MinHeap):
@@ -150,7 +223,7 @@ def print_to_string(*args, **kwargs):
     return contents
 
 
-def debugPrint(*args, **kwargs):
+def debugPrint(*args, recursive=True, **kwargs):
     """
     Print list of string or list of list of string by concatenating it to grid
     l"123131" -> list like ["1", "2", "3", ...]
@@ -232,11 +305,18 @@ def debugPrint(*args, **kwargs):
 
     if args:
         for field in args:
-            print(dbPrint(field, 0))
+            if recursive:
+                printRec(dbPrint(field, 0))
+            else:
+                print(dbPrint(field, 0))
     if kwargs:
         for k, field in kwargs.items():
-            print(f"{dbPrint(k), 0}:")
-            print(dbPrint(field, 0))
+            if recursive:
+                printRec(f"{dbPrint(k), 0}:")
+                printRec(dbPrint(field, 0))
+            else:
+                print(f"{dbPrint(k), 0}:")
+                print(dbPrint(field, 0))
 
 
 # Input Parser------------------------------------------------------------------------------------------------------
@@ -263,9 +343,13 @@ class Colors:
 class writer:
     """Used to write to file and stdout"""
 
+    _max_megabytes = 32
+
     def __init__(self, *writers):
         self.writers = writers
         self.nums = 0
+        self.threshold = self._max_megabytes * 1024 * 1024  # 8 mb
+        self.should_write_truncation_message = True
 
     def write(self, text):
         def filter(text: str):
@@ -275,21 +359,36 @@ class writer:
 
         self.nums += len(text)
 
+        should_print = self.nums < self.threshold or text.startswith(">")
+
+        was_truncated = False
         for w in self.writers:
+            if should_print:
+                if self.nums >= self.threshold and text.startswith(">"):
+                    w.write("\n")
+                if hasattr(w, "name") and w.name != "<stdout>":
+                    to_print = filter(text)
+                    w.write(to_print)
+                else:
+                    w.write(text)
+            elif self.should_write_truncation_message:
+                w.write(f"\n......Output is truncated as it's more then {self._max_megabytes} mb\n")
+                was_truncated = True
+        if was_truncated:
+            self.should_write_truncation_message = False
+            should_print = True
+        self._flush(should_print)
+
+    def _flush(self, should_print, recursive=False):
+        for w in self.writers:
+            if hasattr(w, "closed") and not w.closed and hasattr(w, "_flush") and recursive:
+                w._flush(should_print)
             if hasattr(w, "name") and w.name != "<stdout>":
-                to_print = filter(text)
-                w.write(to_print)
-            else:
-                w.write(text)
-        self.flush()
+                if should_print:
+                    Path(w.name).touch()
 
     def flush(self):
-        for w in self.writers:
-            if hasattr(w, "closed") and not w.closed:
-                w.flush()
-            if hasattr(w, "name") and w.name != "<stdout>":
-                if self.nums < 8 * 1024 * 1024:  # 32 mb
-                    Path(w.name).touch()
+        self._flush(True, True)
 
 
 def testCase(i, expected, solver):
@@ -298,11 +397,11 @@ def testCase(i, expected, solver):
     with open(f"src/output/output_{i}.txt", "w+") as file:
         sys.stdout = writer(sys.stdout, file)
 
-        print("----------------------------------------------")
-        print(f"Test Case #{i}:")
+        print(">----------------------------------------------")
+        print(f"> Test Case #{i}:")
 
         if not (input := get_input(i)):
-            print(f"  #{i} Skipped")
+            print(f">  #{i} Skipped")
             sys.stdout = saved
             return
         import time
@@ -311,12 +410,12 @@ def testCase(i, expected, solver):
         ans = solver(i, input)
         if expected is not None:
             if print_to_string(expected) != print_to_string(ans):
-                print(f"  {Colors.FAIL}#{i} Wrong Answer = {ans} 😡😡😡{Colors.ENDC}, Expected: {expected}")
+                print(f">  {Colors.FAIL}#{i} Wrong Answer = {ans} 😡😡😡{Colors.ENDC}, Expected: {expected}")
             else:
-                print(f"  {Colors.OKGREEN}#{i} Answer Correct = {ans} 🥳🥳🥳 {Colors.ENDC}")
+                print(f">  {Colors.OKGREEN}#{i} Answer Correct = {ans} 🥳🥳🥳 {Colors.ENDC}")
         else:
-            print(f"  {Colors.WARNING}#{i} Answer = {ans} 🤔🤔🤔, No expected answer Provided{Colors.ENDC}")
-        print(f"  #{i} Time = {time.time() - st: .5f}s")
+            print(f">  {Colors.WARNING}#{i} Answer = {ans} 🤔🤔🤔, No expected answer Provided{Colors.ENDC}")
+        print(f">  #{i} Time = {time.time() - st: .5f}s")
         sys.stdout = saved
 
 
