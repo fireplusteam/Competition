@@ -104,31 +104,47 @@ def printRec(
     print("", end=end)
 
 
-def trace_recursive_calls(func):
+def trace_recursive_calls(truncate_call_parameters=100):
     """
     trace recursive function with calls and returns
     use like
-    @utils.trace_recursive_calls
+
+    @cache
+    @utils.trace_recursive_calls()
     def rec_func(...):
         pass
     """
 
-    @functools.wraps(func)
-    def wrapper(*args, **kwargs):
-        global global_recursive_depth
-        nonlocal current_depth
-        indent = recursive_indent(global_recursive_depth + 1)
-        print(f"{indent[:-1]}{func.__name__} called: ({', '.join(str(arg) for arg in args)})" + " {")
-        global_recursive_depth += 1
-        current_depth += 1
-        result = func(*args, **kwargs)
-        global_recursive_depth -= 1
-        current_depth -= 1
-        print(f"{indent[:-1]}{func.__name__}({', '.join(str(arg) for arg in args)}) returning {result}" + " }")
-        return result
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            global global_recursive_depth
+            nonlocal current_depth
+            indent = recursive_indent(global_recursive_depth + 1)
+            print(f"{indent[:-1]}{func.__name__} called: ", end="")
+            calls = f"({', '.join(str(arg) for arg in args)})"
 
-    current_depth = 0
-    return wrapper
+            def print_calls():
+                if len(calls) > truncate_call_parameters:
+                    return f"{calls[:truncate_call_parameters]}..."
+                else:
+                    return calls
+
+            print(print_calls() + " {")
+
+            global_recursive_depth += 1
+            current_depth += 1
+            result = func(*args, **kwargs)
+            global_recursive_depth -= 1
+            current_depth -= 1
+            print(f"{indent[:-1]}{func.__name__}", end="")
+            print(f" {print_calls()} returning {result}" + " }")
+            return result
+
+        current_depth = 0
+        return wrapper
+
+    return decorator
 
 
 class MaxHeap(MinHeap):
