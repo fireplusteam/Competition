@@ -36,6 +36,11 @@ class GraphVisualization:
 
 
 class HeapObj(object):
+    """
+    Use this wrapper if you want to change the min to max or add custom key to be comparable
+    Works with Sorted collections where limited functionality
+    """
+
     def __init__(self, val, min=True, key: Callable | None = None):
         self.val = val
         self.key = key
@@ -60,6 +65,8 @@ class HeapObj(object):
 
 
 class MinHeap(object):
+    """Out of the box min heap structure"""
+
     def __init__(self, array: Iterable | None, key: Callable | None = None):
         self.h = []
         self.key = key
@@ -86,7 +93,7 @@ class MinHeap(object):
         return len(self.h)
 
 
-global_recursive_depth = 0
+_global_recursive_depth = 0
 
 
 def recursive_indent(indent):
@@ -109,7 +116,7 @@ def printRec(
                 print(indent, end=str_separator)
                 should_print_indent = False
 
-        indent = recursive_indent(global_recursive_depth)
+        indent = recursive_indent(_global_recursive_depth)
         str_separator = "" if len(indent) == 0 else " "
 
         if isinstance(value, str):  # multiline
@@ -130,7 +137,7 @@ def printRec(
     print("", end=end)
 
 
-def trace_recursive_calls(truncate_call_parameters=100):
+def trace_recursive_calls(truncate_call_parameters=100, show_calls_returns=True):
     """
     trace recursive function with calls and returns
     use like
@@ -144,11 +151,12 @@ def trace_recursive_calls(truncate_call_parameters=100):
     def decorator(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
-            global global_recursive_depth
+            global _global_recursive_depth
             nonlocal current_depth
-            indent = recursive_indent(global_recursive_depth + 1)
-            print(f"{indent[:-1]}{func.__name__} called: ", end="")
-            calls = f"({', '.join(str(arg) for arg in args)})"
+            indent = recursive_indent(_global_recursive_depth + 1)
+            if show_calls_returns:
+                print(f"{indent[:-1]}{func.__name__} called: ", end="")
+                calls = f"({', '.join(str(arg) for arg in args)})"
 
             def print_calls():
                 if len(calls) > truncate_call_parameters:
@@ -156,15 +164,17 @@ def trace_recursive_calls(truncate_call_parameters=100):
                 else:
                     return calls
 
-            print(print_calls() + " {")
+            if show_calls_returns:
+                print(print_calls() + " {")
 
-            global_recursive_depth += 1
+            _global_recursive_depth += 1
             current_depth += 1
             result = func(*args, **kwargs)
-            global_recursive_depth -= 1
+            _global_recursive_depth -= 1
             current_depth -= 1
-            print(f"{indent[:-1]}{func.__name__}", end="")
-            print(f" {print_calls()} returning {result}" + " }")
+            if show_calls_returns:
+                print(f"{indent[:-1]}{func.__name__}", end="")
+                print(f" {print_calls()} returning {result}" + " }")
             return result
 
         current_depth = 0

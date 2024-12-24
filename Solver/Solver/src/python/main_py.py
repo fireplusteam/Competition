@@ -31,13 +31,14 @@ import fileinput
 import re
 
 # third parties
-# import z3
+# from z3 import z3
 # import networkx
 
 import utils
-from utils import printRec
 from utils import debugPrint
 from utils import trace_recursive_calls
+
+print = utils.printRec  # make recursive output with @trace_recursive_calls
 
 # to run in Terminal: python3 src/python/main_py.py
 # if output is to large: python3 src/python/main_py.py | less -R
