@@ -34,31 +34,11 @@ import re
 # third parties
 # import z3
 # import networkx
-# from graphviz import Digraph  # to visualize the graph
 
 import utils
 from utils import printRec
 from utils import debugPrint
 from utils import trace_recursive_calls
-
-# to run in Terminal: python3 src/python/main_py.py
-# if output is to large: python3 src/python/main_py.py | less -R
-
-
-# class GraphVisualization:
-
-#     def __init__(self):
-#         self.visual = []
-
-#     def addEdge(self, a, b, label):
-#         temp = [a, b, label]
-#         self.visual.append(temp)
-
-#     def visualize(self):
-#         dot = Digraph()
-#         for a, b, label in self.visual:
-#             dot.edge(a, b, label=label)
-#         dot.render("output", view=True, format="png")
 
 
 def aoc_solver(testCase: int, input: str):
@@ -118,7 +98,7 @@ def aoc_solver(testCase: int, input: str):
         add(k1)
         add(k2)
 
-    def get_closest(graph: defaultdict(set), i, max_dist=3):
+    def get_closest(graph: defaultdict(set), i, max_dist=4):
         u = keys[i]
 
         q = Queue()
@@ -146,12 +126,6 @@ def aoc_solver(testCase: int, input: str):
         if i:
             return i - 1
         return None
-
-    # vis_graph = GraphVisualization()
-    # for out, (a, com, b) in gr_g.items():
-    #     vis_graph.addEdge(out, a, com)
-    #     vis_graph.addEdge(out, b, com)
-    # vis_graph.visualize()
 
     def num_name(a):
         return int(a[1:])
@@ -183,7 +157,7 @@ def aoc_solver(testCase: int, input: str):
     def _dfs(v, root_z):
         if v in dfs_dp:
             if dfs_dp[v] == -1:
-                raise "Error"
+                raise Exception("Error, there's a loop")
             return dfs_dp[v]
         dfs_dp[v] = -1
         if v in gr_g:
@@ -195,7 +169,7 @@ def aoc_solver(testCase: int, input: str):
             return r
         if v in gr_w:
             if v[1:] > root_z[1:]:
-                raise f"Wrong swap {v} for z: {root_z}"
+                raise Exception(f"Wrong swap {v} for z: {root_z}")
             r = gr_w[v]
             dfs_dp[v] = r
             return r
@@ -203,44 +177,52 @@ def aoc_solver(testCase: int, input: str):
 
     count_cache = {}
 
-    def _check_configuration(z, carry):
-        nonlocal count_cache
-        if z == max_z + 1:
-            return carry == 0
-        if (z, carry) in count_cache:
-            return count_cache[(z, carry)]
-        if z > max_x:
-            coor_z = to_coordinate("z", z)
-            r = carry == dfs(coor_z, coor_z)
-            count_cache[(z, carry)] = r
-            return r
-
-        for x in range(0, 2):
-            for y in range(0, 2):
-                gr_w[to_coordinate("x", z)] = x
-                gr_w[to_coordinate("y", z)] = y
-                addition = x + y + carry  # x & y  # & carry
-                coor_z = to_coordinate("z", z)
-                res = dfs(coor_z, coor_z)
-                if res == addition % 2:
-                    if _check_configuration(z + 1, addition // 2) == False:
-                        count_cache[(z, carry)] = False
-                        return False
-                else:
-                    count_cache[(z, carry)] = False
-                    return False
-
-        count_cache[(z, carry)] = True
-        return True
+    class Ex(BaseException):
+        def __init__(self, val):
+            self.z = val
 
     def check_configuration(z):
         nonlocal count_cache
         count_cache = {}
-        return _check_configuration(z, 0)
+
+        def _check_configuration(z, carry):
+            nonlocal count_cache
+            if z == max_z + 1:
+                return carry == 0
+            if (z, carry) in count_cache:
+                return count_cache[(z, carry)]
+            if z > max_x:
+                coor_z = to_coordinate("z", z)
+                r = carry == dfs(coor_z, coor_z)
+                count_cache[(z, carry)] = r
+                return r
+
+            r = []
+            for x in range(0, 2):
+                for y in range(0, 2):
+                    gr_w[to_coordinate("x", z)] = x
+                    gr_w[to_coordinate("y", z)] = y
+                    addition = x + y + carry  # x & y  # & carry
+                    coor_z = to_coordinate("z", z)
+                    res = dfs(coor_z, coor_z)
+                    r.append((x, y, res))
+                    if res != addition % 2:
+                        count_cache[(z, carry)] = False
+                        raise Ex(z)
+
+            for x, y, res in r:
+                if _check_configuration(z + 1, addition // 2) == False:
+                    count_cache[(z, carry)] = z
+                    return False
+
+            count_cache[(z, carry)] = True
+            return True
+
+        return _check_configuration(0, 0)
 
     found_pairs = ()
 
-    def find_swaps(not_valid_z: list, num_of_tries: int, pairs: set):
+    def find_swaps(prev_invalid_z, num_of_tries: int, pairs: set):
         nonlocal found_pairs
         if num_of_tries == 4:
             try:
@@ -251,10 +233,19 @@ def aoc_solver(testCase: int, input: str):
                 pass
             return False
 
-        if num_of_tries < len(not_valid_z):
-            i_list = [order_of_key(not_valid_z[num_of_tries])]
-        else:
-            i_list = range(len(gr_g))
+        invalid_z = None
+        try:
+            check_configuration(0)
+        except Ex as e:
+            invalid_z = f"z{e.z:2d}"
+            if prev_invalid_z == invalid_z:
+                return  # that bit is still wrong
+        except:  # not valid circuit
+            return
+
+        i_list = range(len(gr_g))
+        if invalid_z is not None:
+            i_list = itertools.chain([order_of_key(invalid_z)], i_list)
 
         for i in i_list:
             if i in pairs:
@@ -263,23 +254,16 @@ def aoc_solver(testCase: int, input: str):
             for j in all:
                 if j in pairs:
                     continue
-                if num_of_tries < len(not_valid_z) and gr_g[keys[j]][1] != "XOR":
+                if invalid_z and gr_g[keys[j]][1] != "XOR":
                     continue
 
                 swap(i, j)
-                if find_swaps(not_valid_z, num_of_tries + 1, pairs | {i, j}):
+                if find_swaps(invalid_z, num_of_tries + 1, pairs | {i, j}):
                     return True
                 swap(i, j)
         return False
 
-    def find_all_not_valid_z():  # z which has NOT XOR operation
-        res_list = []
-        for k, (a, com, b) in gr_g.items():
-            if k.startswith("z") and com != "XOR" and int(k[1:]) != max_z:
-                res_list.append(k)
-        return res_list
-
-    find_swaps(find_all_not_valid_z(), 0, set())
+    find_swaps(None, 0, set())
 
     ans = [keys[i] for i in found_pairs]
     return ",".join(sorted(ans))

@@ -8,6 +8,32 @@ from collections.abc import Callable, Iterable
 import heapq
 from typing import Literal
 
+from graphviz import Digraph  # to visualize the graph
+
+
+class GraphVisualization:
+    """
+    Visualize graph, sometimes it's useful to see the structure of it
+    graph = GraphVisualization()
+    graph.addEdge("A", "B", label: "Edge Node")
+    ...
+    graph.visualize()
+    that will render it to the png and displays
+    """
+
+    def __init__(self):
+        self.visual = []
+
+    def addEdge(self, a, b, label: str | None = None):
+        temp = [a, b, label]
+        self.visual.append(temp)
+
+    def visualize(self):
+        dot = Digraph()
+        for a, b, label in self.visual:
+            dot.edge(a, b, label=label)
+        dot.render("output", view=True, format="png")
+
 
 class HeapObj(object):
     def __init__(self, val, min=True, key: Callable | None = None):
