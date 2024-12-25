@@ -93,6 +93,19 @@ class MinHeap(object):
         return len(self.h)
 
 
+class MaxHeap(MinHeap):
+    """Out of the box max heap structure"""
+
+    def put(self, x):
+        heapq.heappush(self.h, HeapObj(x, min=False, key=self.key))
+
+    def get(self):
+        return heapq.heappop(self.h).val
+
+    def __getitem__(self, i):
+        return self.h[i].val
+
+
 _global_recursive_depth = 0
 
 
@@ -107,6 +120,11 @@ def printRec(
     file=None,
     flush: Literal[False] = False,
 ):
+    """Print recursively items according to @trace_recursive_calls() macro
+    | some string
+    | | another string
+    | | | third level or recursive call
+    """
     should_print_indent = True
     for t, value in enumerate(values):
 
@@ -181,17 +199,6 @@ def trace_recursive_calls(truncate_call_parameters=100, show_calls_returns=True)
         return wrapper
 
     return decorator
-
-
-class MaxHeap(MinHeap):
-    def put(self, x):
-        heapq.heappush(self.h, HeapObj(x, min=False, key=self.key))
-
-    def get(self):
-        return heapq.heappop(self.h).val
-
-    def __getitem__(self, i):
-        return self.h[i].val
 
 
 def FourD(rows, columns, z, w, def_val):
