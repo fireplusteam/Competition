@@ -1,5 +1,6 @@
 __YEAR__ = 2024
 __DAY__ = 10
+__TASK_ID__ = ""  # used for tests input prefix like __TASK_ID__ = "A"
 # -----------------------------------------------------
 from functools import cache
 import math

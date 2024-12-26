@@ -1,19 +1,23 @@
 import sys
 
 import utils
+
 import solution as solution
 
-# import aoc.y2024.main_py_2024_12_2 as solution
+# import aoc.y2024.main_py_2024_23_2 as solution
 
 
-# to run in Terminal: python3 src/python/main_py.py
-# if output is to large: python3 src/python/main_py.py | less -R
+# to run in Terminal: python3 src/python/tests_runner.py
+# if output is to large: python3 src/python/tests_runner.py | less -R
 
 #  Test Cases -----------------------------------------------------------------------
 
 
 def testCase(i, expected=None):
-    utils.testCase(i, expected, lambda i, input: solution.aoc_solver(i, input))
+    task_i = str(i)
+    if hasattr(solution, "__TASK_ID__") and len(solution.__TASK_ID__) > 0:
+        task_i = solution.__TASK_ID__ + "_" + task_i
+    utils.testCase(task_i, expected, lambda i, input: solution.aoc_solver(i, input))
 
 
 sys.setrecursionlimit(10**6)

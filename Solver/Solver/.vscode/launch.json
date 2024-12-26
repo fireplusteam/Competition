@@ -61,7 +61,7 @@
             "name": "Python Debugger: Main",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/src/python/main_py.py",
+            "program": "${workspaceFolder}/src/python/tests_runner.py",
             "console": "internalConsole",
             "cwd": "${workspaceFolder}"
         }
