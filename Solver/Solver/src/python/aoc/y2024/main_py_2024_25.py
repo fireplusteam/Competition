@@ -45,6 +45,7 @@ print = utils.printRec  # make recursive output with @trace_recursive_calls
 
 
 def aoc_solver(testCase: int, input: str):
+    input = sys.stdin.read()
     lines = input.strip().split("\n\n")
     ans = 0
     # Solution is here
@@ -84,25 +85,3 @@ def aoc_solver(testCase: int, input: str):
             ans += is_
 
     return ans
-
-
-#  Test Cases -----------------------------------------------------------------------
-
-
-def testCase(i, expected=None):
-    utils.testCase(i, expected, lambda i, input: aoc_solver(i, input))
-
-
-sys.setrecursionlimit(10**6)
-
-with open("src/output/output.txt", "w+") as file:
-    sys.stdout = utils.writer(sys.stdout, file)
-
-    testCase(1, 3)
-    # testCase(2)
-    # testCase(3)
-    # testCase(4)
-    # testCase(5)
-
-    utils.download_content(__YEAR__, __DAY__)
-    testCase("puzzle")

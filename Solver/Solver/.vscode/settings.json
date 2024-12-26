@@ -152,5 +152,19 @@
     "black-formatter.args": [
         "--line-length",
         "160"
-    ]
+    ],
+    // Controls if quick suggestions should show up while typing
+    "editor.quickSuggestions": {
+        "other": false,
+        "comments": false,
+        "strings": false
+    },
+    // Controls if suggestions should be accepted with "Enter" - in addition to "Tab". Helps to avoid ambiguity between inserting new lines and accepting suggestions.
+    // "editor.acceptSuggestionOnEnter": "off",
+    // Controls the delay in ms after which quick suggestions will show up.
+    "editor.quickSuggestionsDelay": 500,
+    // Enable word based suggestions
+    "editor.wordBasedSuggestions": "off",
+    "editor.suggestOnTriggerCharacters": true,
+    // "editor.autoClosingBrackets": "never"
 }

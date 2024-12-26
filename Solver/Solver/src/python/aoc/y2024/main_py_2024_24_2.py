@@ -42,6 +42,7 @@ from utils import trace_recursive_calls
 
 
 def aoc_solver(testCase: int, input: str):
+    input = sys.stdin.read()
     wire, gates = input.strip().split("\n\n")
     ans = 0
     # Solution is here
@@ -267,25 +268,3 @@ def aoc_solver(testCase: int, input: str):
 
     ans = [keys[i] for i in found_pairs]
     return ",".join(sorted(ans))
-
-
-#  Test Cases -----------------------------------------------------------------------
-
-
-def testCase(i, expected=None):
-    utils.testCase(i, expected, lambda i, input: aoc_solver(i, input))
-
-
-sys.setrecursionlimit(10**6)
-
-with open("src/output/output.txt", "w+") as file:
-    sys.stdout = utils.writer(sys.stdout, file)
-
-    # testCase(1, "z00,z01,z02,z05")
-    # testCase(2, 2024)
-    # testCase(3)
-    # testCase(4)
-    # testCase(5)
-
-    utils.download_content(__YEAR__, __DAY__)
-    testCase("puzzle")

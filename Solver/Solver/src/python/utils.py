@@ -381,15 +381,16 @@ def debugPrint(*args, recursive=True, **kwargs):
 # Input Parser------------------------------------------------------------------------------------------------------
 
 
-def get_input(i):
-    file_path = f"src/input/input_{i}.txt"
+def get_file_path(i):
+    return f"src/input/input_{i}.txt"
+
+
+def check_input(i):
+    file_path = get_file_path(i)
     if not os.path.exists(file_path):
         return None
-    with open(file_path, "r") as file:
-        r = file.read()
-        if len(r) == 0:
-            return None
-    return r
+    stat = os.stat(file_path)
+    return stat.st_size > 0
 
 
 class Colors:
@@ -459,23 +460,28 @@ def testCase(i, expected, solver):
         print(">----------------------------------------------")
         print(f"> Test Case #{i}:")
 
-        if not (input := get_input(i)):
+        if not check_input(i):
             print(f">  #{i} Skipped")
             sys.stdout = saved
             return
         import time
 
-        st = time.time()
-        ans = solver(i, input)
-        if expected is not None:
-            if print_to_string(expected) != print_to_string(ans):
-                print(f">  {Colors.FAIL}#{i} Wrong Answer = {ans} 😡😡😡{Colors.ENDC}, Expected: {expected}")
+        saved_stdin = sys.stdin
+        with open(get_file_path(i), "r") as input_file:
+            sys.stdin = input_file
+
+            st = time.time()
+            ans = solver(i, input)
+            if expected is not None:
+                if print_to_string(expected) != print_to_string(ans):
+                    print(f">  {Colors.FAIL}#{i} Wrong Answer = {ans} 😡😡😡{Colors.ENDC}, Expected: {expected}")
+                else:
+                    print(f">  {Colors.OKGREEN}#{i} Answer Correct = {ans} 🥳🥳🥳 {Colors.ENDC}")
             else:
-                print(f">  {Colors.OKGREEN}#{i} Answer Correct = {ans} 🥳🥳🥳 {Colors.ENDC}")
-        else:
-            print(f">  {Colors.WARNING}#{i} Answer = {ans} 🤔🤔🤔, No expected answer Provided{Colors.ENDC}")
-        print(f">  #{i} Time = {time.time() - st: .5f}s")
-        sys.stdout = saved
+                print(f">  {Colors.WARNING}#{i} Answer = {ans} 🤔🤔🤔, No expected answer Provided{Colors.ENDC}")
+            print(f">  #{i} Time = {time.time() - st: .5f}s")
+            sys.stdout = saved
+        sys.stdin = saved_stdin
 
 
 # ------------------------------------ download input script
