@@ -17,7 +17,7 @@ def testCase(i, expected=None):
     task_i = str(i)
     if hasattr(solution, "__TASK_ID__") and len(solution.__TASK_ID__) > 0:
         task_i = solution.__TASK_ID__ + "_" + task_i
-    utils.testCase(task_i, expected, lambda i, input: solution.aoc_solver(i, input))
+    utils.testCase(task_i, expected, lambda i: solution.aoc_solver(i))
 
 
 sys.setrecursionlimit(10**6)

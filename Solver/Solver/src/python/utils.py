@@ -471,7 +471,7 @@ def testCase(i, expected, solver):
             sys.stdin = input_file
 
             st = time.time()
-            ans = solver(i, input)
+            ans = solver(i)
             if expected is not None:
                 if print_to_string(expected) != print_to_string(ans):
                     print(f">  {Colors.FAIL}#{i} Wrong Answer = {ans} 😡😡😡{Colors.ENDC}, Expected: {expected}")

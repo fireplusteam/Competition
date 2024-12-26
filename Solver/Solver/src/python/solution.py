@@ -45,7 +45,7 @@ print = utils.printRec  # make recursive output with @trace_recursive_calls
 # if output is to large: python3 src/python/solution.py < in.txt | less -R
 
 
-def aoc_solver(testCase: int, input: str):
+def aoc_solver(testCase: int):
     input = sys.stdin.read().strip()
     lines = input.split("\n")
     ans = 0
