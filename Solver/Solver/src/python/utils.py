@@ -67,7 +67,7 @@ class HeapObj(object):
 class MinHeap(object):
     """Out of the box min heap structure"""
 
-    def __init__(self, array: Iterable | None, key: Callable | None = None):
+    def __init__(self, array: Iterable | None = None, key: Callable | None = None):
         self.h = []
         self.key = key
         if array is None:
