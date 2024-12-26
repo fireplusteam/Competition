@@ -65,7 +65,7 @@ def aoc_solver(testCase: int, input: str):
         costs[2] = [(0, nums[2]), (1, nums[3])]
         costs[3] = [(0, nums[4]), (2, nums[5])]
 
-        q = utils.MaxHeap(None, key=lambda x: (x[2][3], x[1][3], x[1][2], x[1][1]))
+        q = utils.MaxHeap(key=lambda x: (x[2][3], x[1][3], x[1][2], x[1][1]))
         q.put((0, (1, 0, 0, 0), (0, 0, 0, 0)))  # day, rob, res
         seen = set()
 
@@ -95,6 +95,9 @@ def aoc_solver(testCase: int, input: str):
                     for i in range(len(rob)):
                         if determine_max_buy(i, res) > 0:
                             rob[i] += 1
+                            if i == 3:  # if we buy the last robot, we can minus the resources
+                                for j, cost in costs[3]:
+                                    next_res[j] -= cost
 
                     res = next_res
                 return res[3]
@@ -107,37 +110,30 @@ def aoc_solver(testCase: int, input: str):
                 continue
             ind += 1
 
-            def adj(n_resources, robots: tuple):
-                def adj(n_resources: list, robots: tuple, n_robots):
-                    if n_robots[0] > 4 or n_robots[1] > 10 or n_robots[2] > 12:
-                        return
-                    buy = 0
-                    for i in range(3, -1, -1):
-                        can_be_bought = determine_max_buy(i, n_resources)
-                        if can_be_bought > 0:
-                            for j, cost in costs[i]:
-                                n_resources[j] -= cost
-                            n_robots[i] += 1
-                            yield tuple(n_robots), tuple(harvest(robots, n_resources))
-                            for j, cost in costs[i]:
-                                n_resources[j] += cost
-                            n_robots[i] -= 1
-                            buy += 1
-                            if buy >= 2:  # try to build only two last robots
-                                return
+            def adj(n_resources: list, n_robots: list):
+                buy = 0
+                for i in range(3, -1, -1):
+                    can_be_bought = determine_max_buy(i, n_resources)
+                    if can_be_bought > 0:
+                        for j, cost in costs[i]:
+                            n_resources[j] -= cost
+                        n_robots[i] += 1
+                        yield tuple(n_robots), tuple(harvest(robots, n_resources))
+                        for j, cost in costs[i]:
+                            n_resources[j] += cost
+                        n_robots[i] -= 1
+                        buy += 1
+                        if buy >= 2:  # try to build only two last robots
+                            return
 
-                    yield tuple(n_robots), tuple(harvest(robots, n_resources))
+                yield tuple(n_robots), tuple(harvest(robots, n_resources))
 
-                yield from adj(n_resources.copy(), robots, list(robots))
-
-            n_resources = list(resources)
-            for day_offset in range(day + 1, min(day + 3, time_end + 1)):
-                for n_rob, n_res in adj(n_resources, list(robots)):
-                    key = hash((day_offset, n_rob, n_res))
-                    if key not in seen:
-                        q.put((day_offset, n_rob, n_res))
-                        seen.add(key)
-                n_resources = harvest(robots, n_resources)
+            day_offset = day + 1
+            for n_rob, n_res in adj(list(resources), list(robots)):
+                key = hash((day_offset, n_rob, n_res))
+                if key not in seen:
+                    q.put((day_offset, n_rob, n_res))
+                    seen.add(key)
         ans += (b_id + 1) * best
 
     return ans
