@@ -64,6 +64,14 @@
             "program": "${workspaceFolder}/src/python/tests_runner.py",
             "console": "internalConsole",
             "cwd": "${workspaceFolder}"
+        },
+        {
+            "name": "Python Debugger: Active File",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "internalConsole",
+            "cwd": "${workspaceFolder}"
         }
     ]
 }
