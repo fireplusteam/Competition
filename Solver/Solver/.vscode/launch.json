@@ -70,6 +70,9 @@
             "type": "debugpy",
             "request": "launch",
             "program": "${file}",
+            "args": [
+                "DEBUG"
+            ],
             "console": "internalConsole",
             "cwd": "${workspaceFolder}"
         }
