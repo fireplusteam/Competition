@@ -35,6 +35,7 @@ class GraphVisualization:
         dot.render("output", view=True, format="png")
 
 
+# ----------------------------- DATA STRUCTURES -----------------------------
 class HeapObj(object):
     """
     Use this wrapper if you want to change the min to max or add custom key to be comparable
@@ -106,6 +107,45 @@ class MaxHeap(MinHeap):
         return self.h[i].val
 
 
+class DisjoinedSet:
+    def __init__(self, n):
+        self.parent = [x for x in range(n)]
+        self.components = n
+        self.size = [1 for _ in range(n)]
+        self.undo_operation = []
+
+    def find(self, x):
+        while self.parent[x] != x:
+            x = self.parent[x]
+        return x
+
+    def merge(self, x, y):
+        x = self.find(x)
+        y = self.find(y)
+        if x == y:
+            self.undo_operation.append(None)  # fake
+            return
+
+        if self.size[x] < self.size[y]:
+            x, y = y, x
+
+        self.undo_operation.append((x, y))
+        self.parent[y] = x
+        self.size[x] += self.size[y]
+        self.components -= 1
+
+    def undo(self):
+        if self.undo_operation[-1] == None:
+            self.undo_operation.pop()
+            return
+
+        x, y = self.undo_operation.pop()
+        self.parent[y] = y
+        self.size[x] -= self.size[y]
+        self.components += 1
+
+
+# -------------------------------------------- PRINTING HELPERS
 _global_recursive_depth = 0
 
 
