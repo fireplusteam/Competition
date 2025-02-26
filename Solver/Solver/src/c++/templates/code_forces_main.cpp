@@ -30,7 +30,7 @@ void solve() {
 int main(int argc, const char *argv[]) {
     ios_base::sync_with_stdio(true);
 #ifdef LOCAL
-    ifstream in("input/input.txt");
+    ifstream in("input_1.txt");
     std::cin.tie(0);
     std::cin.rdbuf(in.rdbuf());
 #endif
