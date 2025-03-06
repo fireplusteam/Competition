@@ -15,6 +15,7 @@
 
 using namespace std;
 
+// https://discuss.codechef.com/t/tutorial-disjoint-sparse-table/17404
 // Prebuild in O(nlog(n))
 // answer query in O(1)
 // set define function like [&](int a, int b) { return min(a, b); } or similar
