@@ -52,6 +52,8 @@ public:
     }
 };
 
+/// Prebuild in O(n * log(n))
+/// Answer LCP in O(1)
 class SuffixArray {
     vector<int> p, eqClasses, lcp;
     string a; // input string
