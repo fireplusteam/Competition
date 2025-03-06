@@ -37,8 +37,8 @@ int main(int argc, const char *argv[]) {
 
     int T;
     cin >> T;
-    cout << imie(T) << endl;
     for (int t = 0; t < T; ++t) {
+        debug() << "Test Case #" << t << "       ---------------------------------------" << endl;
         solve();
     }
     return 0;
