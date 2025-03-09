@@ -20,7 +20,7 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "C/C++ Address Sanitizer",
+            "name": "C/C++ Address Sanitizer: Main",
             "program": "${workspaceFolder}/.build/${fileBasenameNoExtension}",
             "args": [],
             "cwd": "${workspaceFolder}/src/input",
