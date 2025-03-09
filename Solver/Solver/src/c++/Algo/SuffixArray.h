@@ -157,6 +157,10 @@ public:
         return p;
     }
 
+    const vector<int> &getEqClasses() const {
+        return eqClasses;
+    }
+
     const string &getString() const {
         return a;
     }

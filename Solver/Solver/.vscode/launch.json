@@ -17,6 +17,16 @@
             "MIMode": "lldb",
             "preLaunchTask": "C/C++: clang++ build active file"
         },*/
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "C/C++ Address Sanitizer",
+            "program": "${workspaceFolder}/.build/${fileBasenameNoExtension}",
+            "args": [],
+            "cwd": "${workspaceFolder}/src/input",
+            "preLaunchTask": "C/C++: clang++ build active file",
+            "console": "internalConsole",
+        },
         { // install GNU to mac terminal -> brew install gcc@12
             "name": "C/C++: GNU: Main",
             "type": "cppdbg",
