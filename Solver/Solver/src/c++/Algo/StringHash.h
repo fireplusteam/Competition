@@ -21,16 +21,9 @@ public:
     StringHash(const string &s)
         : n((int)s.size()),
           h1(n + 1),
-          h2(n + 1),
-          p1Inverse(n + 1, -1),
-          p2Inverse(n + 1, -1) {
-
-        int p1       = 1;
-        int p2       = 1;
-
-        p1Inverse[0] = 1;
-        p2Inverse[0] = 1;
-
+          h2(n + 1) {
+        int p1 = 1;
+        int p2 = 1;
         for (int i = 1; i <= n; ++i) {
             h1[i] = (h1[i - 1] + (long long)s[i - 1] * p1) % MOD1;
             h2[i] = (h2[i - 1] + (long long)s[i - 1] * p2) % MOD2;
@@ -69,36 +62,30 @@ public:
 
 private:
     int inv1(int i) {
-        if (p1Inverse[i] == -1)
-            p1Inverse[i] = inversePow(P1, (long long)i * (MOD1 - 2) % (MOD1 - 1), MOD1);
+        if (p1Inverse.size() == 0)
+            p1Inverse.push_back(1);
+        while (p1Inverse.size() <= i)
+            p1Inverse.push_back((long long)p1Inverse.back() * P1_INV % MOD1);
         return p1Inverse[i];
     }
     int inv2(int i) {
-        if (p2Inverse[i] == -1)
-            p2Inverse[i] = inversePow(P2, (long long)i * (MOD2 - 2) % (MOD2 - 1), MOD2);
+        if (p2Inverse.size() == 0)
+            p2Inverse.push_back(1);
+        while (p2Inverse.size() <= i)
+            p2Inverse.push_back((long long)p2Inverse.back() * P2_INV % MOD2);
         return p2Inverse[i];
-    }
-    int inversePow(int a, int n, int m) {
-        int r = 1;
-        while (n > 0) {
-            if (n & 1) {
-                --n;
-                r = (long long)r * a % m;
-            } else {
-                a   = (long long)a * a % m;
-                n >>= 1;
-            }
-        }
-        return r;
     }
     int n;
     vector<int> h1, h2;
-    vector<int> p1Inverse, p2Inverse;
+    static vector<int> p1Inverse, p2Inverse;
     // constants
     const static int P1   = 239017;
     const static int P2   = 648391;
     const static int MOD1 = 1000000007;
     const static int MOD2 = 1000000009;
+    const int P1_INV      = 836166471; // P1 ^ (MOD2 - 2) % MOD1
+    const int P2_INV      = 986939988; // P2 ^ (MOD2 - 2) % MOD2
 };
+vector<int> StringHash::p1Inverse, StringHash::p2Inverse;
 
 #endif
