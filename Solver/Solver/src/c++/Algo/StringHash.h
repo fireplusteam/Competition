@@ -20,24 +20,22 @@ class StringHash {
 public:
     StringHash(const string &s)
         : n((int)s.size()),
-          p1(n + 1),
-          p2(n + 1),
           h1(n + 1),
           h2(n + 1),
           p1Inverse(n + 1, -1),
           p2Inverse(n + 1, -1) {
 
-        p1[0]        = 1;
-        p2[0]        = 1;
+        int p1       = 1;
+        int p2       = 1;
 
         p1Inverse[0] = 1;
         p2Inverse[0] = 1;
 
         for (int i = 1; i <= n; ++i) {
-            p1[i] = (long long)p1[i - 1] * P1 % MOD1;
-            p2[i] = (long long)p2[i - 1] * P2 % MOD2;
-            h1[i] = (h1[i - 1] + (long long)s[i - 1] * p1[i - 1]) % MOD1;
-            h2[i] = (h2[i - 1] + (long long)s[i - 1] * p2[i - 1]) % MOD2;
+            h1[i] = (h1[i - 1] + (long long)s[i - 1] * p1) % MOD1;
+            h2[i] = (h2[i - 1] + (long long)s[i - 1] * p2) % MOD2;
+            p1    = (long long)p1 * P1 % MOD1;
+            p2    = (long long)p2 * P2 % MOD2;
         }
     }
 
@@ -72,12 +70,12 @@ public:
 private:
     int inv1(int i) {
         if (p1Inverse[i] == -1)
-            p1Inverse[i] = inversePow(p1[i], MOD1 - 2, MOD1);
+            p1Inverse[i] = inversePow(P1, (long long)i * (MOD1 - 2) % (MOD1 - 1), MOD1);
         return p1Inverse[i];
     }
     int inv2(int i) {
         if (p2Inverse[i] == -1)
-            p2Inverse[i] = inversePow(p2[i], MOD2 - 2, MOD2);
+            p2Inverse[i] = inversePow(P2, (long long)i * (MOD2 - 2) % (MOD2 - 1), MOD2);
         return p2Inverse[i];
     }
     int inversePow(int a, int n, int m) {
@@ -94,7 +92,7 @@ private:
         return r;
     }
     int n;
-    vector<int> p1, p2, h1, h2;
+    vector<int> h1, h2;
     vector<int> p1Inverse, p2Inverse;
     // constants
     const static int P1   = 239017;
