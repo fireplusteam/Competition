@@ -43,6 +43,9 @@ public:
 
     /// get a hash of substring in a range [l, r]
     long long getHash(int l, int r) {
+        assert(0 <= l < n);
+        assert(0 <= r < n);
+        assert(l <= r);
         int hash1 = ((long long)h1[r + 1] - h1[l] + MOD1) * inv1(l) % MOD1;
         int hash2 = ((long long)h2[r + 1] - h2[l] + MOD2) * inv2(l) % MOD2;
         return ((long long)hash1 << 32) + hash2;
