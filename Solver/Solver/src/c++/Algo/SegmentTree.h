@@ -24,6 +24,48 @@ class SegmentTree {
     int n;
 
 public:
+    class Node {
+        SegmentTree<T> *tree;
+        int vert;
+        int leftInd;
+        int rightInd;
+
+    public:
+        Node(SegmentTree<T> *_tree, int _vert, int _leftInd, int _rightInd)
+            : tree(_tree),
+              vert(_vert),
+              leftInd(_leftInd),
+              rightInd(_rightInd) {
+        }
+        Node(const Node &node)
+            : tree(node.tree),
+              vert(node.vert),
+              leftInd(node.leftInd),
+              rightInd(node.rightInd) {
+        }
+        optional<Node> leftNode() {
+            if (leftInd > (leftInd + rightInd) >> 1 || leftInd == rightInd)
+                return {};
+            return Node(tree, vert * 2 + 1, leftInd, (leftInd + rightInd) >> 1);
+        }
+        optional<Node> rightNode() {
+            if (((leftInd + rightInd) >> 1) + 1 > rightInd || leftInd == rightInd)
+                return {};
+            return Node(tree, vert * 2 + 2, ((leftInd + rightInd) >> 1) + 1, rightInd);
+        }
+        bool isLeaf() {
+            return leftInd == rightInd;
+        }
+        int getLeftInd() const {
+            return leftInd;
+        }
+        int getRightInd() const {
+            return rightInd;
+        }
+        T getVal() const {
+            return tree->tree[vert];
+        }
+    };
     SegmentTree(const vector<T> &arr, const function<T(const T &, const T &, const T &)> &_func)
         : tree(arr.size() * 4),
           func(_func),
@@ -43,6 +85,10 @@ public:
             return tree[vert];
         };
         build(0, 0, n - 1);
+    }
+
+    Node getRoot() {
+        return Node(this, 0, 0, n - 1);
     }
 
     void set(int i, T val) {
@@ -69,30 +115,6 @@ public:
         _set(0, 0, n - 1);
     }
 
-    // void update(int i, int j, const function<T(const T &)> &updateFunc) {
-    //     j                                  -= 1;
-    //     function<T(int, int, int)> _update  = [&](int vert, int left, int right) {
-    //         if (left > right)
-    //             return defaultValue();
-    //         if (max(i, left) > min(j, right))
-    //             return tree[vert];
-    //         int mid = (left + right) / 2;
-    //         if (i <= left && right <= j) {
-    //             if (left == right)
-    //                 return tree[vert] = updateFunc(tree[vert]);
-    //             return tree[vert] = func(
-    //                        updateFunc(tree[vert]),
-    //                        value(vert * 2 + 1, left, mid),
-    //                        value(vert * 2 + 2, mid + 1, right)
-    //                    );
-    //         }
-    //         tree[vert] = func(tree[vert], _update(vert * 2 + 1, left, mid), _update(vert * 2 + 2, mid + 1, right));
-    //         return tree[vert];
-    //     };
-    //     assert(0 <= i && i <= j && j < n);
-    //     _update(0, 0, n - 1);
-    // }
-
     T get(int i, int j) {
         j                               -= 1;
         function<T(int, int, int)> _get  = [&](int vert, int left, int right) {
@@ -112,5 +134,50 @@ public:
         return _get(0, 0, n - 1);
     }
 };
+
+
+// Example of how to use dfs on SegmentTree to find the minimum index in range [i, j) where a[min_ind] >= x
+// struct State {
+//     long long maxValue = 0;
+
+//     State(int val, int index)
+//         : maxValue(val) {
+//     }
+//     State() {
+//     }
+// };
+
+// vector<State> initState(n);
+// SegmentTree<State> seg(initState, [&](const State &oldValue, const State &a, const State &b) -> State {
+//     State ret    = State(0, 0);
+//     ret.maxValue = max(a.maxValue, b.maxValue);
+//     return ret;
+// });
+
+// /// get min index in [i, j) where elem[root] >= x
+// int findMinInd(SegmentTree<State>::Node root, int x, int i, int j) {
+//     j                                           -= 1;
+//     function<int(SegmentTree<State>::Node)> dfs  = [&](SegmentTree<State>::Node root) {
+//         if (max(i, root.getLeftInd()) > min(root.getRightInd(), j))
+//             return -1;
+//         if (root.getVal().maxValue < x)
+//             return -1;
+//         if (root.isLeaf()) {
+//             return root.getVal().maxValue >= x ? root.getLeftInd() : -1;
+//         }
+//         if (auto leftNode = root.leftNode()) {
+//             int r = dfs(*leftNode);
+//             if (r != -1)
+//                 return r;
+//         }
+//         if (auto rightNode = root.rightNode()) {
+//             int r = dfs(*rightNode);
+//             if (r != -1)
+//                 return r;
+//         }
+//         return -1;
+//     };
+//     return dfs(root);
+// }
 
 #endif
