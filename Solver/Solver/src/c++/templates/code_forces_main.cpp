@@ -31,6 +31,7 @@ int main(int argc, const char *argv[]) {
     ios_base::sync_with_stdio(true);
 #ifdef LOCAL
     ifstream in("input_1.txt");
+    // freopen("input_1.txt", "r", stdin);
     std::cin.tie(0);
     std::cin.rdbuf(in.rdbuf());
 #endif
