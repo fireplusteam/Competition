@@ -118,13 +118,12 @@ public:
     T get(int i, int j) {
         j                               -= 1;
         function<T(int, int, int)> _get  = [&](int vert, int left, int right) {
-            if (max(i, left) > min(j, right))
-                return tree[vert];
+            assert(max(i, left) <= min(j, right));
             if (i <= left && right <= j) {
                 return tree[vert];
             }
             int mid = (left + right) / 2;
-            if (max(left, i) > min(mid, i))
+            if (max(left, i) > min(mid, j))
                 return _get(vert * 2 + 2, mid + 1, right);
             if (max(mid + 1, i) > min(right, j))
                 return _get(vert * 2 + 1, left, mid);
