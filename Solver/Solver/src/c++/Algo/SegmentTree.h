@@ -65,6 +65,9 @@ public:
         T getVal() const {
             return tree->tree[vert];
         }
+        void updateVal(const T &val) {
+            tree->tree[vert] = val;
+        }
     };
     SegmentTree(const vector<T> &arr, const function<T(const T &, const T &, const T &)> &_func)
         : tree(arr.size() * 4),
