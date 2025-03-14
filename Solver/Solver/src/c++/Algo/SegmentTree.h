@@ -19,9 +19,12 @@
 // SegmentTree<long long> seg(a, [&](long long a, long long b) { return min(a, b); });
 template <class T>
 class SegmentTree {
+    vector<bool> mark;
     vector<T> tree;
-    function<T(const T &, const T &, const T &)> func; // (T root, T leftChild, T rightChild)
+    function<T(const T &, const optional<T> &, const optional<T> &)> func; // (T root, T leftChild, T rightChild)
+    function<T(const T &, const T &)> lazyPropageFunc;                     // (T root, T leaf)
     int n;
+
 
 public:
     class Node {
@@ -43,12 +46,12 @@ public:
               leftInd(node.leftInd),
               rightInd(node.rightInd) {
         }
-        optional<Node> leftNode() {
+        optional<Node> leftNode() const {
             if (leftInd > (leftInd + rightInd) >> 1 || leftInd == rightInd)
                 return {};
             return Node(tree, vert * 2 + 1, leftInd, (leftInd + rightInd) >> 1);
         }
-        optional<Node> rightNode() {
+        optional<Node> rightNode() const {
             if (((leftInd + rightInd) >> 1) + 1 > rightInd || leftInd == rightInd)
                 return {};
             return Node(tree, vert * 2 + 2, ((leftInd + rightInd) >> 1) + 1, rightInd);
@@ -65,78 +68,142 @@ public:
         T getVal() const {
             return tree->tree[vert];
         }
+        bool isMark() const {
+            return tree->mark[vert];
+        }
+        void mark(bool val) {
+            tree->mark[vert] = val;
+        }
         void updateVal(const T &val) {
             tree->tree[vert] = val;
         }
+        void update() {
+            if (!isLeaf())
+                tree->updateChild(*this);
+        }
     };
-    SegmentTree(const vector<T> &arr, const function<T(const T &, const T &, const T &)> &_func)
-        : tree(arr.size() * 4),
-          func(_func),
-          n((int)arr.size()) {
-        function<T(int, int, int)> build = [&](int vert, int left, int right) {
-            assert(left <= right);
-            if (left == right) {
-                tree[vert] = arr[left];
-                return tree[vert];
+
+private:
+    void updateChild(Node &root, optional<T> rootVal = {}) {
+        auto leftNode = root.leftNode(), rightNode = root.rightNode();
+        if (leftNode && rightNode)
+            root.updateVal(func(rootVal.value_or(root.getVal()), leftNode->getVal(), rightNode->getVal()));
+        else if (leftNode)
+            root.updateVal(func(rootVal.value_or(root.getVal()), leftNode->getVal(), {}));
+        else
+            root.updateVal(func(rootVal.value_or(root.getVal()), {}, rightNode->getVal()));
+    }
+    void propagate(Node &root) {
+        if (!root.isLeaf() && root.isMark()) {
+            auto leftNode = root.leftNode();
+
+            if (leftNode) {
+                leftNode->updateVal(lazyPropageFunc(root.getVal(), leftNode->getVal()));
+                leftNode->mark(true);
             }
-            int mid = (left + right) / 2;
-            if (left > mid)
-                return tree[vert] = build(vert * 2 + 2, mid + 1, right);
-            if (mid + 1 > right)
-                return tree[vert] = build(vert * 2 + 1, left, mid);
-            tree[vert] = func(tree[vert], build(vert * 2 + 1, left, mid), build(vert * 2 + 2, mid + 1, right));
-            return tree[vert];
+            auto rightNode = root.rightNode();
+            if (rightNode) {
+                rightNode->updateVal(lazyPropageFunc(root.getVal(), rightNode->getVal()));
+                rightNode->mark(true);
+            }
+            // update root
+            updateChild(root, T());
+            root.mark(false);
+        }
+    }
+
+public:
+    SegmentTree(
+        const vector<T> &arr,
+        const function<T(const T &, const optional<T> &, const optional<T> &)> &_func,
+        const function<T(const T &, const T &)> &_lazyPropageFunc
+    )
+        : mark(arr.size() * 4, false),
+          tree(arr.size() * 4),
+          func(_func),
+          lazyPropageFunc(_lazyPropageFunc),
+          n((int)arr.size()) {
+        function<void(Node &)> build = [&](Node &root) {
+            if (root.isLeaf()) {
+                root.updateVal(arr[root.getLeftInd()]);
+                return;
+            }
+            if (auto leftNode = root.leftNode())
+                build(*leftNode);
+            if (auto rightNode = root.rightNode())
+                build(*rightNode);
+            updateChild(root);
         };
-        build(0, 0, n - 1);
+        auto root = getRoot();
+        build(root);
     }
 
     Node getRoot() {
         return Node(this, 0, 0, n - 1);
     }
 
-    void set(int i, T val) {
-        function<T(int, int, int)> _set = [&](int vert, int left, int right) {
-            assert(left <= right);
-            if (left == right) {
-                assert(left == i);
-                tree[vert] = val;
-                return val;
+    void set(int i, int j, const function<T(const T &)> &operation) {
+        j                           -= 1;
+        function<void(Node &)> _set  = [&](Node &root) {
+            if (max(i, root.getLeftInd()) > min(j, root.getRightInd()))
+                return;
+            propagate(root);
+            if (root.isLeaf() || (i <= root.getLeftInd() && root.getRightInd() <= j)) {
+                root.mark(true);
+                root.updateVal(operation(root.getVal()));
+                return;
             }
-            int mid = (left + right) / 2;
+            if (auto leftNode = root.leftNode())
+                _set(*leftNode);
+            if (auto rightNode = root.rightNode())
+                _set(*rightNode);
+            updateChild(root);
+        };
+        assert(i <= j && 0 <= i && j < n);
+        auto root = getRoot();
+        _set(root);
+    }
+
+    void set(int i, T val) {
+        function<void(Node &)> _set = [&](Node &root) {
+            if (root.isLeaf()) {
+                root.updateVal(val);
+                return;
+            }
+            propagate(root);
+            int mid = (root.getLeftInd() + root.getRightInd()) / 2;
             if (i <= mid)
-                if (mid + 1 <= right)
-                    tree[vert] = func(tree[vert], _set(vert * 2 + 1, left, mid), tree[vert * 2 + 2]);
-                else
-                    tree[vert] = _set(vert * 2 + 1, left, mid);
-            else if (left <= mid)
-                tree[vert] = func(tree[vert], tree[vert * 2 + 1], _set(vert * 2 + 2, mid + 1, right));
+                _set(*root.leftNode());
             else
-                tree[vert] = _set(vert * 2 + 2, mid + 1, right);
-            return tree[vert];
+                _set(*root.rightNode());
+            updateChild(root);
         };
         assert(0 <= i && i < n);
-        _set(0, 0, n - 1);
+        auto root = getRoot();
+        _set(root);
     }
 
     T get(int i, int j) {
-        j                               -= 1;
-        function<T(int, int, int)> _get  = [&](int vert, int left, int right) {
-            assert(max(i, left) <= min(j, right));
-            if (i <= left && right <= j) {
-                return tree[vert];
+        j                        -= 1;
+        function<T(Node &)> _get  = [&](Node &root) {
+            assert(max(i, root.getLeftInd()) <= min(j, root.getRightInd()));
+            if (i <= root.getLeftInd() && root.getRightInd() <= j) {
+                return root.getVal();
             }
-            int mid = (left + right) / 2;
-            if (max(left, i) > min(mid, j))
-                return _get(vert * 2 + 2, mid + 1, right);
-            if (max(mid + 1, i) > min(right, j))
-                return _get(vert * 2 + 1, left, mid);
-            return func(tree[vert], _get(vert * 2 + 1, left, mid), _get(vert * 2 + 2, mid + 1, right));
+            propagate(root);
+            int mid       = (root.getLeftInd() + root.getRightInd()) / 2;
+            auto leftNode = root.leftNode(), rightNode = root.rightNode();
+            if (max(root.getLeftInd(), i) > min(mid, j))
+                return func(root.getVal(), {}, _get(*rightNode));
+            if (max(mid + 1, i) > min(root.getRightInd(), j))
+                return func(root.getVal(), _get(*leftNode), {});
+            return func(root.getVal(), _get(*leftNode), _get(*rightNode));
         };
         assert(0 <= i && i <= j && j < n);
-        return _get(0, 0, n - 1);
+        auto root = getRoot();
+        return _get(root);
     }
 };
-
 
 // Example of how to use dfs on SegmentTree to find the minimum index in range [i, j) where a[min_ind] >= x
 // struct State {
