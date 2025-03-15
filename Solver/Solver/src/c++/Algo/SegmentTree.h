@@ -25,7 +25,6 @@ class SegmentTree {
     function<T(const T &, const T &)> lazyPropageFunc;                     // (T root, T leaf)
     int n;
 
-
 public:
     class Node {
         SegmentTree<T> *tree;
@@ -49,12 +48,13 @@ public:
         optional<Node> leftNode() const {
             if (leftInd > (leftInd + rightInd) >> 1 || leftInd == rightInd)
                 return {};
-            return Node(tree, vert * 2 + 1, leftInd, (leftInd + rightInd) >> 1);
+            return Node(tree, vert + 1, leftInd, (leftInd + rightInd) >> 1);
         }
         optional<Node> rightNode() const {
-            if (((leftInd + rightInd) >> 1) + 1 > rightInd || leftInd == rightInd)
+            int mid = (leftInd + rightInd) >> 1;
+            if (mid + 1 > rightInd || leftInd == rightInd)
                 return {};
-            return Node(tree, vert * 2 + 2, ((leftInd + rightInd) >> 1) + 1, rightInd);
+            return Node(tree, vert + 2 * (mid - leftInd + 1), ((leftInd + rightInd) >> 1) + 1, rightInd);
         }
         bool isLeaf() {
             return leftInd == rightInd;
@@ -118,8 +118,8 @@ public:
         const function<T(const T &, const optional<T> &, const optional<T> &)> &_func,
         const function<T(const T &, const T &)> &_lazyPropageFunc
     )
-        : mark(arr.size() * 4, false),
-          tree(arr.size() * 4),
+        : mark(arr.size() * 2, false),
+          tree(arr.size() * 2),
           func(_func),
           lazyPropageFunc(_lazyPropageFunc),
           n((int)arr.size()) {
