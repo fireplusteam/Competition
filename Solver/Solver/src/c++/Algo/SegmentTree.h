@@ -21,8 +21,8 @@ template <class T>
 class SegmentTree {
     vector<bool> mark;
     vector<T> tree;
-    function<T(const T &, const optional<T> &, const optional<T> &)> func; // (T root, T leftChild, T rightChild)
-    function<T(const T &, const T &)> lazyPropageFunc;                     // (T root, T leaf)
+    function<T(const T &, const T &, const T &)> func; // (T root, T leftChild, T rightChild)
+    function<T(const T &, const T &)> lazyPropageFunc; // (T root, T leaf)
     int n;
 
 public:
@@ -45,18 +45,14 @@ public:
               leftInd(node.leftInd),
               rightInd(node.rightInd) {
         }
-        optional<Node> leftNode() const {
-            if (leftInd > (leftInd + rightInd) >> 1 || leftInd == rightInd)
-                return {};
+        Node leftNode() const {
             return Node(tree, vert + 1, leftInd, (leftInd + rightInd) >> 1);
         }
-        optional<Node> rightNode() const {
+        Node rightNode() const {
             int mid = (leftInd + rightInd) >> 1;
-            if (mid + 1 > rightInd || leftInd == rightInd)
-                return {};
-            return Node(tree, vert + 2 * (mid - leftInd + 1), ((leftInd + rightInd) >> 1) + 1, rightInd);
+            return Node(tree, vert + 2 * (mid - leftInd + 1), mid + 1, rightInd);
         }
-        bool isLeaf() {
+        bool isLeaf() const {
             return leftInd == rightInd;
         }
         int getLeftInd() const {
@@ -65,47 +61,37 @@ public:
         int getRightInd() const {
             return rightInd;
         }
-        T getVal() const {
+        const T &getVal() const {
             return tree->tree[vert];
         }
         bool isMark() const {
             return tree->mark[vert];
         }
-        void mark(bool val) {
+        void mark(bool val) const {
             tree->mark[vert] = val;
         }
-        void updateVal(const T &val) {
+        void updateVal(const T &val) const {
             tree->tree[vert] = val;
         }
-        void update() {
+        void update() const {
             if (!isLeaf())
                 tree->updateChild(*this);
         }
     };
 
 private:
-    void updateChild(Node &root, optional<T> rootVal = {}) {
-        auto leftNode = root.leftNode(), rightNode = root.rightNode();
-        if (leftNode && rightNode)
-            root.updateVal(func(rootVal.value_or(root.getVal()), leftNode->getVal(), rightNode->getVal()));
-        else if (leftNode)
-            root.updateVal(func(rootVal.value_or(root.getVal()), leftNode->getVal(), {}));
-        else
-            root.updateVal(func(rootVal.value_or(root.getVal()), {}, rightNode->getVal()));
+    void updateChild(const Node &root, optional<T> rootVal = {}) {
+        root.updateVal(func(rootVal.value_or(root.getVal()), root.leftNode().getVal(), root.rightNode().getVal()));
     }
-    void propagate(Node &root) {
+    void propagate(const Node &root) {
         if (!root.isLeaf() && root.isMark()) {
             auto leftNode = root.leftNode();
-
-            if (leftNode) {
-                leftNode->updateVal(lazyPropageFunc(root.getVal(), leftNode->getVal()));
-                leftNode->mark(true);
-            }
+            leftNode.updateVal(lazyPropageFunc(root.getVal(), leftNode.getVal()));
+            leftNode.mark(true);
             auto rightNode = root.rightNode();
-            if (rightNode) {
-                rightNode->updateVal(lazyPropageFunc(root.getVal(), rightNode->getVal()));
-                rightNode->mark(true);
-            }
+            rightNode.updateVal(lazyPropageFunc(root.getVal(), rightNode.getVal()));
+            rightNode.mark(true);
+
             // update root
             updateChild(root, T());
             root.mark(false);
@@ -115,7 +101,7 @@ private:
 public:
     SegmentTree(
         const vector<T> &arr,
-        const function<T(const T &, const optional<T> &, const optional<T> &)> &_func,
+        const function<T(const T &, const T &, const T &)> &_func,
         const function<T(const T &, const T &)> &_lazyPropageFunc
     )
         : mark(arr.size() * 2, false),
@@ -123,19 +109,16 @@ public:
           func(_func),
           lazyPropageFunc(_lazyPropageFunc),
           n((int)arr.size()) {
-        function<void(Node &)> build = [&](Node &root) {
+        function<void(const Node &)> build = [&](const Node &root) {
             if (root.isLeaf()) {
                 root.updateVal(arr[root.getLeftInd()]);
                 return;
             }
-            if (auto leftNode = root.leftNode())
-                build(*leftNode);
-            if (auto rightNode = root.rightNode())
-                build(*rightNode);
+            build(root.leftNode());
+            build(root.rightNode());
             updateChild(root);
         };
-        auto root = getRoot();
-        build(root);
+        build(getRoot());
     }
 
     Node getRoot() {
@@ -143,8 +126,8 @@ public:
     }
 
     void set(int i, int j, const function<T(const T &)> &operation) {
-        j                           -= 1;
-        function<void(Node &)> _set  = [&](Node &root) {
+        j                                 -= 1;
+        function<void(const Node &)> _set  = [&](const Node &root) {
             if (max(i, root.getLeftInd()) > min(j, root.getRightInd()))
                 return;
             propagate(root);
@@ -153,19 +136,16 @@ public:
                 root.updateVal(operation(root.getVal()));
                 return;
             }
-            if (auto leftNode = root.leftNode())
-                _set(*leftNode);
-            if (auto rightNode = root.rightNode())
-                _set(*rightNode);
+            _set(root.leftNode());
+            _set(root.rightNode());
             updateChild(root);
         };
         assert(i <= j && 0 <= i && j < n);
-        auto root = getRoot();
-        _set(root);
+        _set(getRoot());
     }
 
     void set(int i, T val) {
-        function<void(Node &)> _set = [&](Node &root) {
+        function<void(const Node &)> _set = [&](const Node &root) {
             if (root.isLeaf()) {
                 root.updateVal(val);
                 return;
@@ -173,35 +153,32 @@ public:
             propagate(root);
             int mid = (root.getLeftInd() + root.getRightInd()) / 2;
             if (i <= mid)
-                _set(*root.leftNode());
+                _set(root.leftNode());
             else
-                _set(*root.rightNode());
+                _set(root.rightNode());
             updateChild(root);
         };
         assert(0 <= i && i < n);
-        auto root = getRoot();
-        _set(root);
+        _set(getRoot());
     }
 
     T get(int i, int j) {
-        j                        -= 1;
-        function<T(Node &)> _get  = [&](Node &root) {
+        j                              -= 1;
+        function<T(const Node &)> _get  = [&](const Node &root) {
             assert(max(i, root.getLeftInd()) <= min(j, root.getRightInd()));
             if (i <= root.getLeftInd() && root.getRightInd() <= j) {
                 return root.getVal();
             }
             propagate(root);
-            int mid       = (root.getLeftInd() + root.getRightInd()) / 2;
-            auto leftNode = root.leftNode(), rightNode = root.rightNode();
+            int mid = (root.getLeftInd() + root.getRightInd()) / 2;
             if (max(root.getLeftInd(), i) > min(mid, j))
-                return func(root.getVal(), {}, _get(*rightNode));
+                return _get(root.rightNode());
             if (max(mid + 1, i) > min(root.getRightInd(), j))
-                return func(root.getVal(), _get(*leftNode), {});
-            return func(root.getVal(), _get(*leftNode), _get(*rightNode));
+                return _get(root.leftNode());
+            return func(root.getVal(), _get(root.leftNode()), _get(root.rightNode()));
         };
         assert(0 <= i && i <= j && j < n);
-        auto root = getRoot();
-        return _get(root);
+        return _get(getRoot());
     }
 };
 
