@@ -91,7 +91,7 @@ private:
     void updateChild(const Node &root) {
         root.updateVal(mergeFunc(root.getVal(), root.leftNode().getVal(), root.rightNode().getVal()));
     }
-    void propagate(const Node &root) {
+    void propagate(const Node &root, bool shouldUpdate = false) {
         if (!root.isLeaf() && root.isMark()) {
             auto leftNode = root.leftNode();
             leftNode.updateVal(lazyPropagateFunc(root.getVal(), leftNode.getVal()));
@@ -101,6 +101,8 @@ private:
             rightNode.mark(true);
             // reset root
             root.updateVal(T());
+            if (shouldUpdate)
+                updateChild(root);
             root.mark(false);
         }
     }
@@ -176,8 +178,7 @@ public:
             if (i <= root.getLeftInd() && root.getRightInd() <= j) {
                 return root.getVal();
             }
-            propagate(root);
-            updateChild(root);
+            propagate(root, true);
             int mid = (root.getLeftInd() + root.getRightInd()) / 2;
             if (max(root.getLeftInd(), i) > min(mid, j))
                 return _get(root.rightNode());
@@ -189,7 +190,6 @@ public:
         return _get(getRoot());
     }
 };
-
 
 //// ----------------------------------------------------------------------------
 // Example of how to use dfs on SegmentTree to find the minimum index in range [i, j) where a[min_ind] >= x
