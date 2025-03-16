@@ -142,7 +142,11 @@ public:
         function<void(const Node &)> _set  = [&](const Node &root) {
             if (max(i, root.getLeftInd()) > min(j, root.getRightInd()))
                 return;
-            if (root.isLeaf() || (i <= root.getLeftInd() && root.getRightInd() <= j)) {
+            if (root.isLeaf()) {
+                root.updateVal(operation(root.getVal()));
+                return;
+            }
+            if (i <= root.getLeftInd() && root.getRightInd() <= j) {
                 root.mark(true);
                 root.updateVal(operation(root.getVal()));
                 return;
@@ -193,6 +197,7 @@ public:
         return _get(getRoot());
     }
 };
+
 
 //// ----------------------------------------------------------------------------
 // Example of how to use dfs on SegmentTree to find the minimum index in range [i, j) where a[min_ind] >= x
