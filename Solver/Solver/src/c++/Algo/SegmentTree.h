@@ -81,6 +81,9 @@ public:
         void updateVal(const T &val) const {
             tree->tree[vert] = val;
         }
+        void propagate() const {
+            tree->propagate(*this, true);
+        }
         void update() const {
             if (!isLeaf())
                 tree->updateChild(*this);
@@ -221,6 +224,7 @@ public:
 //         if (root.isLeaf()) {
 //             return root.getVal().maxValue >= x ? root.getLeftInd() : -1;
 //         }
+//         root.propagate();
 //         int r = dfs(root.leftNode());
 //         if (r != -1)
 //             return r;
