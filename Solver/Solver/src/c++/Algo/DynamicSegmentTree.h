@@ -197,7 +197,7 @@ public:
     }
 
     void set(int i, T val) {
-        function<void(Node &)> _set = [&](Node &root) {
+        function<void(Node *)> _set = [&](Node *root) {
             if (root->isLeaf()) {
                 root->updateVal(val);
                 return;
@@ -234,4 +234,5 @@ public:
         return _get(getRoot());
     }
 };
+
 #endif
