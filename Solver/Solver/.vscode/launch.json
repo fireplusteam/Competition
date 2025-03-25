@@ -25,7 +25,7 @@
             "args": [],
             "cwd": "${workspaceFolder}/src/input",
             "preLaunchTask": "C/C++: clang++ build active file",
-            "console": "internalConsole",
+            "console": "integratedTerminal",
         },
         { // install GNU to mac terminal -> brew install gcc@12
             "name": "C/C++: GNU: Main",
