@@ -1,6 +1,20 @@
 #ifndef max_flow_dinic_h
 #define max_flow_dinic_h
 
+#include <stdio.h>
+#include <algorithm>
+#include <cassert>
+#include <complex>
+#include <fstream>
+#include <functional>
+#include <iostream>
+#include <map>
+#include <queue>
+#include <set>
+#include <sstream>
+
+using namespace std;
+
 struct Edge {
     int to, rev, cap, f;
 };
@@ -9,7 +23,10 @@ struct max_flow_dinic {
     vector<vector<Edge>> graph;
     vector<int> dist;
 
-    max_flow_dinic(int nodes) : graph(nodes), dist(nodes) {}
+    max_flow_dinic(int nodes)
+        : graph(nodes),
+          dist(nodes) {
+    }
 
     void add_edge(int s, int t, int cap) {
         Edge a = {t, (int)graph[t].size(), cap, 0};
@@ -22,7 +39,7 @@ struct max_flow_dinic {
         fill(dist.begin(), dist.end(), -1);
         dist[src] = 0;
         vector<int> q(graph.size());
-        int qt = 0;
+        int qt  = 0;
         q[qt++] = src;
         for (int qh = 0; qh < qt; qh++) {
             int u = q[qh];
@@ -48,7 +65,7 @@ struct max_flow_dinic {
             if (dist[v] == dist[u] + 1) {
                 int df = dinic_dfs(ptr, v, dest, min(f, e.cap - e.f));
                 if (df > 0) {
-                    e.f += df;
+                    e.f               += df;
                     graph[v][e.rev].f -= df;
                     return df;
                 }

@@ -71,7 +71,7 @@ public:
 /// numbers on this segment is
 //     1 .Your task is to find the shortest good segment.
 //     Input:
-// The first line contains an integer 𝑛(1≤𝑛≤105).The second line contains integers 𝑎𝑖(1≤𝑎𝑖≤1018).class State {
+// The first line contains an integer 𝑛(1≤𝑛≤10^5).The second line contains integers 𝑎𝑖(1≤𝑎𝑖≤1018).class State {
 
 long long getShortestSegmentWithGCDOne(const vector<long long> &a) {
     class State {
