@@ -17,3 +17,5 @@ https://adventofcode.com/
 List Of Algos/Materials:
 https://codeforces.com/blog/entry/13529
 https://github.com/hkirat/Algorithmic-Resources
+
+Competitive programming handbook: https://cses.fi/book/book.pdf
