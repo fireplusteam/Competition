@@ -20,6 +20,7 @@ https://github.com/hkirat/Algorithmic-Resources
 
 Competitive programming handbook: https://cses.fi/book/book.pdf
 
+Articles and Specific Topic:
 Zeta Transform, Mobius Transform and Subset Sum Convolution:
 Sum over Subsets(SOS) - https://codeforces.com/blog/entry/45223
 Mobius Inclusion/Exclusion and Subset sum convolution - https://codeforces.com/blog/entry/72488
