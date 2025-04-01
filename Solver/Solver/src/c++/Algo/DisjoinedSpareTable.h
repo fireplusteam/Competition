@@ -73,7 +73,7 @@ public:
             return initialValue(x);
         int k2  = __builtin_clz(x ^ y) ^ 31;
         int lev = maxLev - 1 - k2;
-        int ans = table[lev][x];
+        T ans   = table[lev][x];
         if (y & ((1 << k2) - 1)) // y % (1<<k2)
             ans = func(ans, table[lev][y]);
         return ans;
