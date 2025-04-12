@@ -95,7 +95,13 @@
         "numeric": "cpp",
         "random": "cpp",
         "type_traits": "cpp",
-        "utility": "cpp"
+        "utility": "cpp",
+        "chrono": "cpp",
+        "exception": "cpp",
+        "*.tcc": "cpp",
+        "cassert": "cpp",
+        "rope": "cpp",
+        "format": "cpp"
     },
     "vim.autoSwitchInputMethod.enable": false,
     "editor.lineNumbers": "relative",
@@ -166,5 +172,6 @@
     // Enable word based suggestions
     "editor.wordBasedSuggestions": "off",
     "editor.suggestOnTriggerCharacters": true,
+    "chat.agent.enabled": false,
     // "editor.autoClosingBrackets": "never"
 }
