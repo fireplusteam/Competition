@@ -20,13 +20,11 @@ class SplayTree:
             else:
                 p.parent.right = x
         p.parent = x
-
         x_right = x.right
         x.right = p
         p.left = x_right
         if x_right:
             x_right.parent = p
-
         return x
 
     def _rotateRight(self, x: Node, p: Node):
@@ -37,29 +35,25 @@ class SplayTree:
             else:
                 p.parent.right = x
         p.parent = x
-
         x_left = x.left
         x.left = p
         p.right = x_left
         if x_left:
             x_left.parent = p
-
         return x
 
     def _expose(self, x: Node):
-        if x is None:
+        if not x:
             self.root = None
             return None
         while True:
             p = x.parent
-            if p is None:
+            if not p:
                 self.root = x
                 break
             g = p.parent
             self.operations += 1
-            assert g != p
-            assert p != x
-            if g is None:
+            if not g:
                 if p.left == x:
                     self.root = self._rotateLeft(x, p)
                 else:
@@ -88,11 +82,11 @@ class SplayTree:
         return [x, right]
 
     def _merge(self, x: Node, y: Node):
-        if x is None and y is None:
+        if not x and not y:
             return self._expose(None)
-        if x is None:
+        if not x:
             return self._expose(y)
-        if y is None:
+        if not y:
             return self._expose(x)
         if x.val > y.val:
             x, y = y, x
@@ -104,7 +98,7 @@ class SplayTree:
         return x
 
     def _find(self, val):
-        if self.root is None:
+        if not self.root:
             return None
         node = self.root
         upper = None
@@ -125,15 +119,9 @@ class SplayTree:
             self._expose(prev)
         return upper
 
-    def contains(self, val):
-        node = self._find(val)
-        if node is None or node.val != val:
-            return False
-        return True
-
     def _insert(self, val):
         node = self._find(val)
-        if node is None:
+        if not node:
             return self._merge(Node(val), self.root), True
         if node.val == val:
             return node, False
@@ -143,13 +131,20 @@ class SplayTree:
         x.right = Node(val, parent=x)
         return self._merge(x, y), True
 
+    # public Interface
+    def contains(self, val):
+        node = self._find(val)
+        if not node or node.val != val:
+            return False
+        return True
+
     def insert(self, val):
         _, ok = self._insert(val)
         return ok
 
     def remove(self, val):
         node = self._find(val)
-        if node is None or node.val != val:
+        if not node or node.val != val:
             return False
         x, y = self._split(node)
         if x and x.left:
