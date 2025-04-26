@@ -44,21 +44,18 @@ class SplayTree:
 
     def _expose(self, x: Node):
         if not x:
-            self.root = None
             return None
         while True:
             p = x.parent
-            if not p:
-                self.root = x
-                break
-            g = p.parent
             self.operations += 1
+            if not p:
+                return x
+            g = p.parent
             if not g:
                 if p.left == x:
-                    self.root = self._rotateLeft(x, p)
+                    return self._rotateLeft(x, p)
                 else:
-                    self.root = self._rotateRight(x, p)
-                break
+                    return self._rotateRight(x, p)
             if g.left == p and p.left == x:  # make x -> p -> g
                 p = self._rotateLeft(p, g)
                 x = self._rotateLeft(x, p)
@@ -71,7 +68,6 @@ class SplayTree:
             elif g.right == p and p.left == x:
                 x = self._rotateLeft(x, p)
                 x = self._rotateRight(x, g)
-        return self.root
 
     def _split(self, x: Node):
         x = self._expose(x)
@@ -79,11 +75,12 @@ class SplayTree:
         if x.right:
             x.right.parent = None
         x.right = None
+        self.root = None
         return [x, right]
 
     def _merge(self, x: Node, y: Node):
         if not x and not y:
-            return self._expose(None)
+            return None
         if not x:
             return self._expose(y)
         if not y:
@@ -101,57 +98,54 @@ class SplayTree:
         if not self.root:
             return None
         node = self.root
-        upper = None
-        prev = node
         while node:
             if node.val == val:
-                self._expose(node)
-                return node
-            prev = node
-            if node.val < val:
-                upper = node
+                break
+            elif node.val < val:
+                if not node.right:
+                    break
                 node = node.right
             else:
+                if not node.left:
+                    break
                 node = node.left
-        if upper:
-            self._expose(upper)
-        else:
-            self._expose(prev)
-        return upper
+        return node
 
-    def _insert(self, val):
+    def insert(self, val):
         node = self._find(val)
         if not node:
-            return self._merge(Node(val), self.root), True
+            self.root = self._merge(Node(val), self.root)
+            return True
         if node.val == val:
-            return node, False
-        x, y = self._split(node)
-
-        assert x.val < val
-        x.right = Node(val, parent=x)
-        return self._merge(x, y), True
+            return False
+        if node.val < val:
+            node.right = Node(val, node)
+            self.root = self._expose(node.right)
+            return True
+        else:
+            node.left = Node(val, node)
+            self.root = self._expose(node.left)
+            return True
 
     # public Interface
     def contains(self, val):
-        node = self._find(val)
-        if not node or node.val != val:
+        self.root = self._find(val)
+        self.root = self._expose(self.root)
+        if not self.root or self.root.val != val:
             return False
         return True
 
-    def insert(self, val):
-        _, ok = self._insert(val)
-        return ok
-
     def remove(self, val):
-        node = self._find(val)
-        if not node or node.val != val:
+        self.root = self._find(val)
+        if not self.root or self.root.val != val:
+            self.root = self._expose(self.root)
             return False
-        x, y = self._split(node)
+        x, y = self._split(self.root)
         if x and x.left:
             x.left.parent = None
         if y:
             y.parent = None
-        self._merge(x.left, y)
+        self.root = self._merge(x.left, y)
         return True
 
     def toList(self):
