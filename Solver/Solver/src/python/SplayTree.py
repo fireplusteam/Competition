@@ -11,6 +11,14 @@ class SplayTree:
     def __init__(self):
         self.root = None
         self.operations = 0
+        self.size = 0
+
+    def _traverse(self, root):
+        if not root:
+            return
+        yield from self._traverse(root.left)
+        yield root.val
+        yield from self._traverse(root.right)
 
     def _rotateLeft(self, x: Node, p: Node):
         x.parent = p.parent
@@ -57,17 +65,17 @@ class SplayTree:
                 else:
                     return self._rotateRight(x, p)
             if g.left == p and p.left == x:  # make x -> p -> g
-                p = self._rotateLeft(p, g)
-                x = self._rotateLeft(x, p)
+                self._rotateLeft(p, g)
+                self._rotateLeft(x, p)
             elif g.right == p and p.right == x:
-                p = self._rotateRight(p, g)
-                x = self._rotateRight(x, p)
+                self._rotateRight(p, g)
+                self._rotateRight(x, p)
             elif g.left == p and p.right == x:  # make p <- x -> g
-                x = self._rotateRight(x, p)
-                x = self._rotateLeft(x, g)
+                self._rotateRight(x, p)
+                self._rotateLeft(x, g)
             elif g.right == p and p.left == x:
-                x = self._rotateLeft(x, p)
-                x = self._rotateRight(x, g)
+                self._rotateLeft(x, p)
+                self._rotateRight(x, g)
 
     def _split(self, x: Node):
         x = self._expose(x)
@@ -115,9 +123,11 @@ class SplayTree:
         node = self._find(val)
         if not node:
             self.root = self._merge(Node(val), self.root)
+            self.size += 1
             return True
         if node.val == val:
             return False
+        self.size += 1
         if node.val < val:
             node.right = Node(val, node)
             self.root = self._expose(node.right)
@@ -140,6 +150,7 @@ class SplayTree:
         if not self.root or self.root.val != val:
             self.root = self._expose(self.root)
             return False
+        self.size -= 1
         x, y = self._split(self.root)
         if x and x.left:
             x.left.parent = None
@@ -148,15 +159,12 @@ class SplayTree:
         self.root = self._merge(x.left, y)
         return True
 
+    def __iter__(self):
+        for i in self.toList():
+            yield i
+
+    def __len__(self):
+        return self.size
+
     def toList(self):
-        ans = []
-
-        def traverse(root):
-            if not root:
-                return
-            traverse(root.left)
-            ans.append(root.val)
-            traverse(root.right)
-
-        traverse(self.root)
-        return ans
+        return list(self._traverse(self.root))
