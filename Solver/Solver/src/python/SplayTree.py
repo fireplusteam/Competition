@@ -209,5 +209,64 @@ class SplayTree:
             return 0
         return self.root.cnt
 
+    def indexOf(self, val):
+        node = self._find(val)
+        self.root = self._expose(node)
+        if self.root and self._val(self.root.val) == self._val(val):
+            if self.root.left:
+                return self.root.left.cnt
+            return 0
+        return -1  # not found
+
     def toList(self):
         return list(self._traverse(self.root))
+
+
+# TEST SPLAY TREE
+if __name__ == "__main__":
+    import random
+
+    sp = SplayTree()
+    sp.insert(1)
+    sp.insert(1)
+    print(sp.toList())
+    sp.insert(8)
+    sp.insert(5)
+    print(sp.toList())
+    sp.insert(10)
+    print(sp.toList())
+    sp.insert(7)
+    sp.insert(9)
+    print(sp.toList())
+    sp.insert(8)
+    print(sp.toList())
+    sp.insert(1)
+    print(sp.toList())
+    sp.insert(5)
+    sp.insert(3)
+    print(sp.toList())
+    for i in range(100000):
+        brute_st = set()
+        sp = SplayTree(key=lambda x: -x)
+        for j in range(10000):
+            if random.randint(0, 1) == 0:
+                val = random.randint(-1000000, 10000000)
+                brute_st.add(val)
+                sp.insert(val)
+                # print("sp.insert(", val, ")")
+            elif len(brute_st) > 0:
+                ind = random.randint(0, len(brute_st) - 1)
+                l = list(brute_st)
+                l.sort()
+                brute_st.remove(l[ind])
+                sp.remove(l[ind])
+            l = list(brute_st)
+            l.sort()
+            l.reverse()
+            assert l == sp.toList()
+            assert len(sp) == len(l)
+            for i in range(len(l)):
+                assert sp[i] == l[i]
+                assert sp.indexOf(sp[i]) == i
+                assert sp.contains(sp[-i - 1]) == True
+        print(i, sp.operations)
