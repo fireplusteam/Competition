@@ -4,14 +4,30 @@ class Node:
         self.left = left
         self.right = right
         self.parent = parent
+        self.cnt = 1
+
+    def pull(self):
+        self.cnt = 1
+        if self.left:
+            self.cnt += self.left.cnt
+        if self.right:
+            self.cnt += self.right.cnt
+
+
+from typing import Callable
 
 
 class SplayTree:
 
-    def __init__(self):
+    def __init__(self, key: Callable | None = None):
         self.root = None
+        self.key = key
         self.operations = 0
-        self.size = 0
+
+    def _val(self, val):
+        if self.key:
+            return self.key(val)
+        return val
 
     def _traverse(self, root):
         if not root:
@@ -33,6 +49,8 @@ class SplayTree:
         p.left = x_right
         if x_right:
             x_right.parent = p
+        p.pull()
+        x.pull()
         return x
 
     def _rotateRight(self, x: Node, p: Node):
@@ -48,6 +66,8 @@ class SplayTree:
         p.right = x_left
         if x_left:
             x_left.parent = p
+        p.pull()
+        x.pull()
         return x
 
     def _expose(self, x: Node):
@@ -84,6 +104,7 @@ class SplayTree:
             x.right.parent = None
         x.right = None
         self.root = None
+        x.pull()
         return [x, right]
 
     def _merge(self, x: Node, y: Node):
@@ -93,13 +114,14 @@ class SplayTree:
             return self._expose(y)
         if not y:
             return self._expose(x)
-        if x.val > y.val:
+        if self._val(x.val) > self._val(y.val):
             x, y = y, x
         while x.right:
             x = x.right
         x = self._expose(x)
         x.right = y
         y.parent = x
+        x.pull()
         return x
 
     def _find(self, val):
@@ -107,9 +129,9 @@ class SplayTree:
             return None
         node = self.root
         while node:
-            if node.val == val:
+            if self._val(node.val) == self._val(val):
                 break
-            elif node.val < val:
+            elif self._val(node.val) < self._val(val):
                 if not node.right:
                     break
                 node = node.right
@@ -123,12 +145,10 @@ class SplayTree:
         node = self._find(val)
         if not node:
             self.root = self._merge(Node(val), self.root)
-            self.size += 1
             return True
-        if node.val == val:
+        if self._val(node.val) == self._val(val):
             return False
-        self.size += 1
-        if node.val < val:
+        if self._val(node.val) < self._val(val):
             node.right = Node(val, node)
             self.root = self._expose(node.right)
             return True
@@ -141,16 +161,15 @@ class SplayTree:
     def contains(self, val):
         self.root = self._find(val)
         self.root = self._expose(self.root)
-        if not self.root or self.root.val != val:
+        if not self.root or self._val(self.root.val) != self._val(val):
             return False
         return True
 
     def remove(self, val):
         self.root = self._find(val)
-        if not self.root or self.root.val != val:
+        if not self.root or self._val(self.root.val) != self._val(val):
             self.root = self._expose(self.root)
             return False
-        self.size -= 1
         x, y = self._split(self.root)
         if x and x.left:
             x.left.parent = None
@@ -159,12 +178,36 @@ class SplayTree:
         self.root = self._merge(x.left, y)
         return True
 
+    def __getitem__(self, index):
+        if index < 0:
+            index = len(self) + index
+        if index < 0:
+            TypeError("Out of Index")
+
+        node = self.root
+        sum = -1
+        while node:
+            if node.left:
+                if sum + node.left.cnt < index:
+                    sum += node.left.cnt
+                else:
+                    node = node.left
+                    continue
+            if 1 + sum == index:
+                self.root = self._expose(node)
+                return node.val
+            sum += 1
+            node = node.right
+        raise TypeError("Out of index")
+
     def __iter__(self):
         for i in self.toList():
             yield i
 
     def __len__(self):
-        return self.size
+        if not self.root:
+            return 0
+        return self.root.cnt
 
     def toList(self):
         return list(self._traverse(self.root))
