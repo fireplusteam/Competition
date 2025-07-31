@@ -24,3 +24,7 @@ Articles and Specific Topic:
 Zeta Transform, Mobius Transform and Subset Sum Convolution:
 Sum over Subsets(SOS) - https://codeforces.com/blog/entry/45223
 Mobius Inclusion/Exclusion and Subset sum convolution - https://codeforces.com/blog/entry/72488
+
+Advanced topics:
+Lagrangian Relaxation
+https://usaco.guide/adv/lagrange?lang=cpp
