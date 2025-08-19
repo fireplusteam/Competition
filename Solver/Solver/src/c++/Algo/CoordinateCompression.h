@@ -22,15 +22,20 @@ class Compresser {
     vector<T> orig;
 
 public:
-    Compresser(const vector<T> &a) {
-        // if you want to preserve the order of compressed coordinate, we need to sort before performing compression
-        // sort(a.begin(), a.end());
+    // if you want not to sort it, use isSorted = false
+    Compresser(const vector<T> &a, bool isSorted = true) {
+        auto b = a;
+        if (isSorted)
+            sort(b.begin(), b.end());
         for (int i = 0; i < (int)a.size(); ++i) {
-            if (mp.contains(a[i]) == false) {
-                mp[a[i]] = (int)orig.size();
-                orig.push_back(a[i]);
+            if (mp.contains(b[i]) == false) {
+                mp[b[i]] = (int)orig.size();
+                orig.push_back(b[i]);
             }
         }
+    }
+    int compressed(const T &a) {
+        return mp[a];
     }
     vector<int> compressed(const vector<T> &a) {
         vector<int> r(a.size());
@@ -38,6 +43,9 @@ public:
             r[i] = mp[a[i]];
         }
         return r;
+    }
+    T uncompressed(const int &a) {
+        return orig[a];
     }
     vector<T> uncompressed(const vector<int> &a) {
         vector<T> r(a.size());
