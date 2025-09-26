@@ -6,6 +6,10 @@ import solution as solution
 
 # import aoc.y2024.main_py_2024_23_2 as solution
 
+# to install all dependencies
+# pip install -r requirements.txt
+# in order to update all libs
+# pip install -r requirements.txt --upgrade
 
 # to run in Terminal: python3 src/python/tests_runner.py
 # if output is to large: python3 src/python/tests_runner.py | less -R
