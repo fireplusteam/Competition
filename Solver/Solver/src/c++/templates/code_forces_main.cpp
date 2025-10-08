@@ -22,6 +22,7 @@ public:
     #include "Helpers.h"
 #endif
 
+mt19937 rng((unsigned int)chrono::steady_clock::now().time_since_epoch().count());
 
 void precalculate() {
     // data needed for all test cases
