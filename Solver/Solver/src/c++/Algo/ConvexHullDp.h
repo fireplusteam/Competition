@@ -16,74 +16,123 @@
 
 using namespace std;
 
-// https://github.com/kth-competitive-programming/kactl/blob/master/content/data-structures/LineContainer.h
+typedef int ftype;
 
-// modified from : https://github.com/niklasb/contest-algos/blob/master/convex_hull/dynamic.cpp
+#define inf 1e100
 
-const long long is_query = -(1LL << 62);
-struct line {
-    long long m, b;
-    mutable function<const line *()> succ;
-    bool operator<(const line &rhs) const {
-        if (rhs.b != is_query)
-            return m < rhs.m;
-        const line *s = succ();
-        if (!s)
-            return 0;
-        long long x = rhs.m;
-        auto left   = (b - s->b) / x;
-        if ((b - s->b) % x == 0)
-            left += 1;
-        return left < s->m - m;
-    }
-};
-
-struct dynamic_hull : public multiset<line> { // will maintain upper hull for maximum
+/// @brief  add lines of form m * x + b,
+/// query returns min by default value at x, but can be configured at Constructing of object
+struct chtDynamicMin {
 private:
-    const long long inf = LLONG_MAX;
-    bool bad(iterator y) {
-        auto z = next(y);
-        if (y == begin()) {
-            if (z == end())
-                return 0;
-            return y->m == z->m && y->b <= z->b;
+    struct line {
+        ftype m, b;
+        long double x;
+        ftype om, ob;
+        ftype val;
+        bool isQuery;
+        int id;
+        line(ftype _m = 0, ftype _b = 0, ftype _om = 0, ftype _ob = 0, int _id = 0) {
+            m       = _m;
+            b       = _b;
+            om      = _om;
+            ob      = _ob;
+            val     = 0;
+            x       = -inf;
+            id      = _id;
+            isQuery = false;
         }
-        auto x = prev(y);
-        if (z == end())
-            return y->m == x->m && y->b <= x->b;
 
-        /* compare two lines by slope, make sure denominator is not 0 */
-        long long v1 = (x->b - y->b);
-        if (y->m == x->m)
-            v1 = x->b > y->b ? inf : -inf;
-        else
-            v1 /= (y->m - x->m);
-        long long v2 = (y->b - z->b);
-        if (z->m == y->m)
-            v2 = y->b > z->b ? inf : -inf;
-        else
-            v2 /= (z->m - y->m);
-        return v1 >= v2;
+        ftype eval(ftype _x) const {
+            return m * _x + b;
+        }
+        bool parallel(const line &l) const {
+            return m == l.m;
+        }
+        long double intersect(const line &l) const {
+            return parallel(l) ? inf : 1.0 * (l.b - b) / (m - l.m);
+        }
+        bool operator<(const line &l) const {
+            if (l.isQuery)
+                return x < l.val;
+            else
+                return m < l.m;
+        }
+    };
+
+    set<line> hull;
+    bool isMinimum;
+    typedef set<line>::iterator iter;
+
+    bool cPrev(iter it) {
+        return it != hull.begin();
+    }
+    bool cNext(iter it) {
+        return it != hull.end() && next(it) != hull.end();
+    }
+
+    bool bad(const line &l1, const line &l2, const line &l3) {
+        return l1.intersect(l3) <= l1.intersect(l2);
+    }
+    bool bad(iter it) {
+        return cPrev(it) && cNext(it) && bad(*prev(it), *it, *next(it));
+    }
+
+    iter update(iter it) {
+        if (!cPrev(it))
+            return it;
+        long double x = it->intersect(*prev(it));
+        line tmp(*it);
+        tmp.x = x;
+        it    = hull.erase(it);
+        return hull.insert(it, tmp);
     }
 
 public:
-    void insert_line(long long m, long long b) {
-        auto y  = insert({m, b});
-        y->succ = [=] { return next(y) == end() ? 0 : &*next(y); };
-        if (bad(y)) {
-            erase(y);
-            return;
-        }
-        while (next(y) != end() && bad(next(y)))
-            erase(next(y));
-        while (y != begin() && bad(prev(y)))
-            erase(prev(y));
+    chtDynamicMin(bool _isMinimum = true)
+        : isMinimum(_isMinimum) {
     }
-    long long eval(long long x) {
-        auto l = *lower_bound((line){x, is_query});
-        return l.m * x + l.b;
+
+    void addLine(ftype m, ftype b, int id) {
+        ftype om = m, ob = b;
+        if (isMinimum) {
+            m *= -1;
+            b *= -1;
+        }
+        line l(m, b, om, ob, id);
+        iter it = hull.lower_bound(l);
+        if (it != hull.end() && l.parallel(*it)) {
+            if (it->b < b)
+                it = hull.erase(it);
+            else
+                return;
+        }
+
+        it = hull.insert(it, l);
+        if (bad(it))
+            return (void)hull.erase(it);
+
+        while (cPrev(it) && bad(prev(it)))
+            hull.erase(prev(it));
+        while (cNext(it) && bad(next(it)))
+            hull.erase(next(it));
+
+        it = update(it);
+        if (cPrev(it))
+            update(prev(it));
+        if (cNext(it))
+            update(next(it));
+    }
+
+    // return value, index of line with optimum result
+    // return inf, -1, if not found
+    pair<ftype, int> query(ftype x) const {
+        if (hull.empty())
+            return {isMinimum ? inf : -inf, -1};
+        line q;
+        q.val = x, q.isQuery = 1;
+        iter it = --hull.lower_bound(q);
+        return {isMinimum ? -it->eval(x) : it->eval(x), it->id};
     }
 };
-
 
 #endif
