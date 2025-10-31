@@ -1,17 +1,31 @@
 #ifndef fenwick_h
 #define fenwick_h
 
-#include <stdio.h>
-#include <algorithm>
-#include <cassert>
-#include <complex>
-#include <fstream>
-#include <functional>
-#include <iostream>
-#include <map>
-#include <queue>
-#include <set>
-#include <sstream>
+#if !defined(__clang__) && defined(__GNUC__)
+    #include <bits/stdc++.h>
+#else
+    #include <algorithm>
+    #include <bitset>
+    #include <cassert>
+    #include <complex>
+    #include <cstdio>
+    #include <ctime>
+    #include <deque>
+    #include <fstream>
+    #include <functional>
+    #include <iostream>
+    #include <list>
+    #include <map>
+    #include <optional>
+    #include <queue>
+    #include <random>
+    #include <regex>
+    #include <set>
+    #include <sstream>
+    #include <stack>
+    #include <unordered_map>
+    #include <unordered_set>
+#endif
 
 using namespace std;
 
@@ -94,6 +108,74 @@ public:
         if (i == 0)
             return get(i);
         return get(i) - get(i - 1);
+    }
+};
+
+
+/// MAX Fenwick
+class FenwickMax {
+    vector<int> val;
+    int inf;
+
+public:
+    FenwickMax(int n, int _inf = INT_MIN)
+        : val(n + 1, _inf),
+          inf(_inf) {
+    }
+
+    // update on [x] with val
+    void update(int x, int _val) {
+        x += 1;
+        assert(1 <= x && x < this->val.size());
+        while (x < this->val.size()) {
+            this->val[x]  = max(this->val[x], _val);
+            x            += x & -x;
+        }
+    }
+    // max on [0, l]
+    int get(int l) {
+        ++l;
+        assert(1 <= l && l < val.size());
+        int ans = inf;
+        while (l > 0) {
+            ans  = max(ans, val[l]);
+            l   -= l & -l;
+        }
+        return ans;
+    }
+};
+
+// MIN Fenwick
+
+class FenwickMin {
+    vector<int> val;
+    int inf;
+
+public:
+    FenwickMin(int n, int _inf = INT_MAX)
+        : val(n + 1, _inf),
+          inf(_inf) {
+    }
+
+    // update on [x] with val
+    void update(int x, int _val) {
+        x += 1;
+        assert(1 <= x && x < this->val.size());
+        while (x < this->val.size()) {
+            this->val[x]  = min(this->val[x], _val);
+            x            += x & -x;
+        }
+    }
+    // max on [0, l]
+    int get(int l) {
+        ++l;
+        assert(1 <= l && l < val.size());
+        int ans = inf;
+        while (l > 0) {
+            ans  = min(ans, val[l]);
+            l   -= l & -l;
+        }
+        return ans;
     }
 };
 
