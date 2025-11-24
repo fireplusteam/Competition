@@ -81,4 +81,39 @@ public:
     }
 };
 
+// Max Disjoined Set
+class DisjoinedSet {
+    vector<int> p;
+    vector<int> maxElement;
+
+public:
+    DisjoinedSet(vector<int> v) {
+        int n      = (int)v.size();
+        p          = vector<int>(n);
+        maxElement = v;
+        for (int i = 0; i < n; ++i) {
+            p[i] = i;
+        }
+    }
+
+    int get(int x) {
+        if (x != p[x])
+            return p[x] = get(p[x]);
+        return x;
+    }
+
+    void unite(int x, int y) {
+        int a = get(x);
+        int b = get(y);
+        if (a == b)
+            return;
+        p[a]          = b;
+        maxElement[b] = max(maxElement[b], maxElement[a]);
+    }
+    int getMaxElement(int i) {
+        i = get(i);
+        return maxElement[i];
+    }
+};
+
 #endif
