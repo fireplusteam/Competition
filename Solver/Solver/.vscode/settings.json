@@ -165,6 +165,7 @@
         "comments": false,
         "strings": false
     },
+    "python.analysis.inlayHints.callArgumentNames": "off",
     // Controls if suggestions should be accepted with "Enter" - in addition to "Tab". Helps to avoid ambiguity between inserting new lines and accepting suggestions.
     // "editor.acceptSuggestionOnEnter": "off",
     // Controls the delay in ms after which quick suggestions will show up.
@@ -173,5 +174,8 @@
     "editor.wordBasedSuggestions": "off",
     "editor.suggestOnTriggerCharacters": true,
     "chat.agent.enabled": false,
+    "github.copilot.enable": {
+        "*": false
+    }
     // "editor.autoClosingBrackets": "never"
 }
