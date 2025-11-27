@@ -113,68 +113,74 @@ public:
 
 
 /// MAX Fenwick
-class FenwickMax {
-    vector<int> val;
-    int inf;
+/// get min/max on range [l, r], update at index
+
+// MAX: FenwickGeneric<int> f(n, INT_MIN, [&](const int &a, const int &b) { return max(a, b); })
+// MIN: FenwickGeneric<int> f(n, INT_MAX, [&](const int &a, const int &b) { return min(a, b); })
+template <class T>
+class FenwickGeneric {
+    vector<T> left;
+    vector<T> right;
+    vector<T> val;
+    T inf;
+    const int n;
+
+    function<T(const T &, const T &)> merge;
+
+    inline int next(int a) {
+        return a + (a & -a);
+    }
+    inline int prev(int a) {
+        return a - (a & -a);
+    }
 
 public:
-    FenwickMax(int n, int _inf = INT_MIN)
-        : val(n + 1, _inf),
-          inf(_inf) {
+    FenwickGeneric(int _n, const T &_inf, const function<T(const T &, const T &)> &_merge)
+        : left(_n + 1, _inf),
+          right(_n + 1, _inf),
+          val(_n + 1, _inf),
+          inf(_inf),
+          n(_n + 1),
+          merge(_merge) {
     }
 
     // update on [x] with val
-    void update(int x, int _val) {
-        x += 1;
-        assert(1 <= x && x < this->val.size());
-        while (x < this->val.size()) {
-            this->val[x]  = max(this->val[x], _val);
-            x            += x & -x;
+    void update(int x, const T &_val) {
+        ++x;
+        assert(1 <= x && x < n);
+        auto _x = x;
+        while (_x < n) {
+            this->left[_x] = merge(this->left[_x], _val);
+            _x             = next(_x);
         }
-    }
-    // max on [0, l]
-    int get(int l) {
-        ++l;
-        assert(1 <= l && l < val.size());
-        int ans = inf;
-        while (l > 0) {
-            ans  = max(ans, val[l]);
-            l   -= l & -l;
+        _x = x;
+        while (_x > 0) {
+            this->right[_x] = merge(this->right[_x], _val);
+            _x              = prev(_x);
         }
-        return ans;
-    }
-};
-
-// MIN Fenwick
-
-class FenwickMin {
-    vector<int> val;
-    int inf;
-
-public:
-    FenwickMin(int n, int _inf = INT_MAX)
-        : val(n + 1, _inf),
-          inf(_inf) {
+        val[x] = merge(val[x], _val);
     }
 
-    // update on [x] with val
-    void update(int x, int _val) {
-        x += 1;
-        assert(1 <= x && x < this->val.size());
-        while (x < this->val.size()) {
-            this->val[x]  = min(this->val[x], _val);
-            x            += x & -x;
+    // get value on [l, r]
+    T get(int l, int r) {
+        ++l, ++r;
+        if (l > r) {
+            return inf;
         }
-    }
-    // max on [0, l]
-    int get(int l) {
-        ++l;
-        assert(1 <= l && l < val.size());
-        int ans = inf;
-        while (l > 0) {
-            ans  = min(ans, val[l]);
-            l   -= l & -l;
+        assert(1 <= l && l < n);
+        assert(1 <= r && r < n);
+        T ans   = inf;
+        auto _l = r;
+        while (prev(_l) >= l) {
+            ans = merge(ans, left[_l]);
+            _l  = prev(_l);
         }
+        _l = l;
+        while (next(_l) <= r) {
+            ans = merge(ans, right[_l]);
+            _l  = next(_l);
+        }
+        ans = merge(ans, val[_l]);
         return ans;
     }
 };
