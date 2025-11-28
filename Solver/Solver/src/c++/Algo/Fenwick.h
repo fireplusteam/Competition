@@ -113,10 +113,11 @@ public:
 
 
 /// MAX Fenwick
-/// get min/max on range [l, r], update at index
+/// get min/max/sum on range [l, r], update at index
 
 // MAX: FenwickGeneric<int> f(n, INT_MIN, [&](const int &a, const int &b) { return max(a, b); })
 // MIN: FenwickGeneric<int> f(n, INT_MAX, [&](const int &a, const int &b) { return min(a, b); })
+// SUM: FenwickGeneric<int> f(n, 0, [&](const int &a, const int &b) { return a + b; })
 template <class T>
 class FenwickGeneric {
     vector<T> left;
