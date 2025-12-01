@@ -49,8 +49,12 @@ print = utils.printRec  # make recursive output with @trace_recursive_calls
 
 def aoc_solver(testCase: int):
     input = sys.stdin.read().strip()
+    # Input parser is here
     lines = input.split("\n")
     # print(lines)
+    for line in lines:
+        line = utils.split_by_strings(["DELIMITERS HERE"], line)
+        # print(line)
     # Solution is here
     ans = 0
 
