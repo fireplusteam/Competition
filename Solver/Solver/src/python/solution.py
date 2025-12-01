@@ -1,5 +1,5 @@
-__YEAR__ = 2024
-__DAY__ = 10
+__YEAR__ = 2025
+__DAY__ = 1
 __TASK_ID__ = ""  # used for tests input prefix like __TASK_ID__ = "A"
 # -----------------------------------------------------
 from functools import cache
@@ -27,6 +27,8 @@ import itertools
 from functools import cmp_to_key
 import random
 
+from sympy import isprime
+
 import sys
 import fileinput
 import re
@@ -48,9 +50,9 @@ print = utils.printRec  # make recursive output with @trace_recursive_calls
 def aoc_solver(testCase: int):
     input = sys.stdin.read().strip()
     lines = input.split("\n")
-    ans = 0
+    # print(lines)
     # Solution is here
-    print(input)
+    ans = 0
 
     return ans
 
