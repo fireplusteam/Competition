@@ -1,5 +1,5 @@
 __YEAR__ = 2025
-__DAY__ = 1
+__DAY__ = 6
 __TASK_ID__ = ""  # used for tests input prefix like __TASK_ID__ = "A"
 # -----------------------------------------------------
 from functools import cache
@@ -52,11 +52,15 @@ def aoc_solver(testCase: int):
     # Input parser is here
     lines = input.split("\n")
     # print(lines)
+    ans = 0
+    n = len(lines)
+    m = len(lines[0])
+    print(n, m)
+
     for line in lines:
         line = utils.split_by_strings(["DELIMITERS HERE"], line)
         # print(line)
     # Solution is here
-    ans = 0
 
     return ans
 
