@@ -65,9 +65,7 @@ def aoc_solver(testCase: int):
             if len(r) > 0:
                 edgs.append(r)
         g = edgs
-        # print(state, g)
 
-        ret = 0
         x = []
         solve = z3.Optimize()
 
@@ -77,32 +75,19 @@ def aoc_solver(testCase: int):
             solve.add(_x >= 0)
 
         for i in range(len(state)):
-            exp = []
+            exp = 0
             for j in range(len(g)):
-                for _, k in enumerate(g[j]):
-                    if i == k:
-                        exp.append("x[" + str(j) + "]")
-            exp = "+".join(exp)
-            exp += "==" + str(state[i])
-            # print(i, exp)
-            z3_exp = eval(exp, globals(), locals())
-            solve.add(z3_exp)
+                if i in g[j]:
+                    exp += x[j]
+            exp = exp == state[i]
+            solve.add(exp)
 
-        exp = []
-        for i in range(len(g)):
-            exp.append("x[" + str(i) + "]")
-        exp = "+".join(exp)
-        exp = eval(exp, globals(), locals())
-
+        exp = x[0]
+        for i in x[1:]:
+            exp += i
         result = solve.minimize(exp)
 
         if solve.check() == z3.sat:
-            model = solve.model()
-            for i in range(len(g)):
-                _x = "x[" + str(i) + "]"
-                _x = eval(_x, globals(), locals())
-                ret += model[_x]
-            print(state, ret)
             val = solve.lower(result)
             return val.as_long()
         else:
