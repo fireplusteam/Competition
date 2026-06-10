@@ -11,7 +11,7 @@
         {
             "type": "cppbuild",
             "label": "C/C++: GNU build active file",
-            "command": "g++-14",
+            "command": "g++-15",
             "args": [
                 "-g",
                 // "${file}", // to make it to build any active file
@@ -65,7 +65,7 @@
                 "-Werror=return-type",
                 "-fsanitize=address",
                 "-fsanitize=undefined",
-                "-DLOCAL"
+                "-DLOCAL",
             ],
             "options": {
                 "cwd": "${fileDirname}"
